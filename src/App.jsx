@@ -453,21 +453,54 @@ html{scroll-behavior:smooth}body{margin:0}
         </div></Fade>
       </section>
 
+      {/* ABOUT */}
       <section className="sec" id="about" style={{ background: "var(--sky-light)", maxWidth: "none", padding: "100px 36px" }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-          <div className="about-grid">
-            <Fade><div className="about-text">
-              <div className="sec-lab">Our Story</div>
-              <h2 className="sec-title">Welcome to<br />The Gathering</h2>
-              <p>We are excited for your first visit and a chance to meet you! Visiting somewhere new can be intimidating. We hope you find we are a community of people that are welcoming, loving, and ready to serve you and your family.</p>
-              <p>No matter where you've been or what you've been through, there's a place for you here. Come as you are — we'd love to meet you.</p>
-              <div className="about-quote">"In a world where everyone is 'virtually connected,' in-person connections seem harder than ever. That's why we started The Gathering — imperfect people trying to follow what Jesus said."<cite>— Shawn &amp; Kelly Evers, Founders</cite></div>
-              <button className="btn btn-dark" onClick={() => go("visit")}>Plan Your First Visit</button>
+          <Fade><div className="sec-h c">
+            <div className="sec-lab">Our Story</div>
+            <h2 className="sec-title">Welcome to The Gathering</h2>
+            <p className="sec-desc">We are excited for your first visit and a chance to meet you! Visiting somewhere new can be intimidating. We hope you find we are a community of people that are welcoming, loving, and ready to serve you and your family. No matter where you've been or what you've been through, there's a place for you here.</p>
+          </div></Fade>
+
+          {/* Community blurb */}
+          <Fade delay={.1}><div style={{ background: "var(--charcoal)", borderRadius: "var(--radius-lg)", padding: "48px", marginBottom: 64, textAlign: "center" }}>
+            <h3 style={{ fontFamily: "var(--head)", fontSize: 26, fontWeight: 600, color: "#fff", marginBottom: 16 }}>A Little About Us</h3>
+            <p style={{ fontSize: 15, lineHeight: 1.85, color: "rgba(255,255,255,.5)", fontWeight: 300, maxWidth: 680, margin: "0 auto 24px" }}>Don't miss the opportunity to be part of our vibrant community every Sunday at 10:30 AM CST for our live services. Experience the warmth and inspiration of our gatherings from wherever you are! And if you can't make it to our live broadcast, don't worry — we have a rich archive of past sessions available for you to explore at your convenience. Join us in celebrating faith, hope, and community!</p>
+            <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
+              <a className="btn btn-accent" href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Watch Live</a>
+              <a className="btn btn-ghost" href={`https://youtube.com/@${YT_HANDLE}`} target="_blank" rel="noopener noreferrer">Sermon Archive →</a>
+            </div>
+          </div></Fade>
+
+          {/* Pastor cards */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+            {/* The Evers */}
+            <Fade><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
+              <div style={{ height: 220, background: "linear-gradient(145deg,var(--charcoal-deep),#33334a)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ textAlign: "center", color: "rgba(255,255,255,.3)" }}>
+                  <div style={{ fontSize: 56 }}>👨‍👩‍</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginTop: 8 }}>Photo Coming Soon</div>
+                </div>
+              </div>
+              <div style={{ padding: "32px" }}>
+                <div className="sec-lab">Founding Pastors</div>
+                <h3 style={{ fontFamily: "var(--head)", fontSize: 28, fontWeight: 600, color: "var(--charcoal)", margin: "8px 0 16px" }}>Shawn &amp; Kelly Evers</h3>
+                <p style={{ fontSize: 14, lineHeight: 1.85, color: "var(--text-lt)", fontWeight: 300 }}>In a world where everyone is "virtually connected," in-person connections seem to be harder than ever. Through their passion for people and Jesus, Shawn and Kelly Evers started The Gathering. The hope is to create a community focused around relationships with each other and with Jesus — a community where everyone is welcome wherever they are in life; imperfect people trying to follow what Jesus said.</p>
+              </div>
             </div></Fade>
-            <Fade delay={.15}><div style={{ borderRadius: "var(--radius-lg)", aspectRatio: "4/3", background: "linear-gradient(145deg,var(--charcoal-deep),#33334a)", display: "flex", alignItems: "center", justifyContent: "center", padding: 40 }}>
-              <div style={{ textAlign: "center", color: "rgba(255,255,255,.4)" }}>
-                <div style={{ fontSize: 48, marginBottom: 12 }}>✝️</div>
-                <p style={{ fontSize: 14, fontWeight: 300 }}>Schererville, Indiana</p>
+
+            {/* The Gibsons */}
+            <Fade delay={.1}><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
+              <div style={{ height: 220, background: "linear-gradient(145deg,#2a2a3a,var(--charcoal-mid))", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ textAlign: "center", color: "rgba(255,255,255,.3)" }}>
+                  <div style={{ fontSize: 56 }}>👨‍👩‍👧‍👦</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginTop: 8 }}>Photo Coming Soon</div>
+                </div>
+              </div>
+              <div style={{ padding: "32px" }}>
+                <div className="sec-lab">Pastor &amp; Family</div>
+                <h3 style={{ fontFamily: "var(--head)", fontSize: 28, fontWeight: 600, color: "var(--charcoal)", margin: "8px 0 16px" }}>The Gibsons</h3>
+                <p style={{ fontSize: 14, lineHeight: 1.85, color: "var(--text-lt)", fontWeight: 300 }}>The Gibsons are excited to help lead at The Gathering! Jordan completed his MDiv in 2018 through Fuller Theological Seminary and has been serving as one of the pastors of The Gathering for almost 9 years. He is passionate about helping those far from God connect to God and the community. Jordan and his wife Kaitlin are proud parents to their children, Birch and Marigold.</p>
               </div>
             </div></Fade>
           </div>
