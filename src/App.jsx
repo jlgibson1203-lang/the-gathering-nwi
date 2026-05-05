@@ -60,7 +60,7 @@ const EXPECT = [
   { icon: "🎵", title: "Worship & Teaching", desc: "Contemporary worship followed by Bible-centered, practical teaching." },
   { icon: "👶", title: "Kids Are Covered", desc: "Children are an important part of the family here at The Gathering! We offer Nursery (ages 0–3) for the full service and Kids' Praise (ages 4–9) after worship. Youth Group (10+) meets every other Sunday morning." },
   { icon: "☕", title: "Stay & Connect", desc: "Hang around after! We'd love to meet you and answer any questions." },
-  { icon: "📱", title: "Church Center App", desc: "Download for events, groups, giving, and staying connected all week." },
+  { icon: "📱", title: "Church Center App", desc: "Download the Church Center app and search The Gathering NWI for events, groups, giving, and staying connected all week." },
 ];
 
 /* ───────── HOOKS ───────── */
@@ -135,7 +135,7 @@ export default function TheGatheringNWI() {
   const NAV = [
     { label: "Home", id: "home" }, { label: "About", id: "about" },
     { label: "Sermons", id: "sermons" }, { label: "Beliefs", id: "beliefs" },
-    { label: "Groups", id: "groups" }, { label: "Events", id: "events" },
+    { label: "Groups", id: "groups" },
     { label: "Visit", id: "visit" }, { label: "Contact", id: "contact" },
   ];
 
@@ -365,7 +365,7 @@ html{scroll-behavior:smooth}body{margin:0}
           </div></Fade>
         </div>
         <div className="hero-meta">
-          <div className="hero-mi"><div className="dot" /> Schererville, Indiana</div>
+          <a href="https://www.google.com/maps?saddr=My+Location&daddr=360+East+Lincoln+Highway+Schererville+IN+46375" target="_blank" rel="noopener noreferrer" className="hero-mi" style={{ textDecoration: "none" }}><div className="dot" /> 360 E Lincoln Hwy, Schererville, IN 46375</a>
           <div className="hero-mi"><div className="dot" /> Sundays 10:30 AM</div>
           <div className="hero-mi"><div className="dot" /> Everyone Welcome</div>
         </div>
@@ -499,7 +499,7 @@ html{scroll-behavior:smooth}body{margin:0}
               </div>
               <div style={{ padding: "32px" }}>
                 <div className="sec-lab">Pastor &amp; Family</div>
-                <h3 style={{ fontFamily: "var(--head)", fontSize: 28, fontWeight: 600, color: "var(--charcoal)", margin: "8px 0 16px" }}>The Gibsons</h3>
+                <h3 style={{ fontFamily: "var(--head)", fontSize: 28, fontWeight: 600, color: "var(--charcoal)", margin: "8px 0 16px" }}>Jordan &amp; Kaitlin Gibson</h3>
                 <p style={{ fontSize: 14, lineHeight: 1.85, color: "var(--text-lt)", fontWeight: 300 }}>The Gibsons are excited to help lead at The Gathering! Jordan completed his MDiv in 2018 through Fuller Theological Seminary and has been serving as one of the pastors of The Gathering for almost 9 years. He is passionate about helping those far from God connect to God and the community. Jordan and his wife Kaitlin are proud parents to their children, Birch and Marigold.</p>
               </div>
             </div></Fade>
@@ -548,21 +548,7 @@ html{scroll-behavior:smooth}body{margin:0}
         </div>
       </section>
 
-      <div className="ev-bg" id="events">
-        <section className="sec" style={{ maxWidth: 1120, padding: "100px 36px" }}>
-          <Fade><div className="sec-h" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 20 }}>
-            <div><div className="sec-lab">What's Coming Up</div><h2 className="sec-title">Upcoming Events</h2></div>
-            <a className="btn btn-outline" href="https://thegatheringnwi.churchcenter.com/" target="_blank" rel="noopener noreferrer">Full Calendar →</a>
-          </div></Fade>
-          <Fade delay={.1}><div className="ev-list">
-            {EVENTS.map((e, i) => <div className="ev" key={i}>
-              <div className="ev-date"><div className="num">{e.date.split(" ")[1]}</div><div className="dn">{e.day}</div></div>
-              <div className="ev-div" /><div className="ev-info"><h4>{e.title}</h4><p>{e.time} · {e.date}</p></div>
-              <span className="ev-tag">{e.tag}</span>
-            </div>)}
-          </div></Fade>
-        </section>
-      </div>
+
 
       <section className="sec">
         <Fade><div className="pray-banner">
@@ -571,13 +557,7 @@ html{scroll-behavior:smooth}body{margin:0}
         </div></Fade>
       </section>
 
-      <section className="sec" id="serve" style={{ paddingTop: 0 }}>
-        <Fade><div className="serve-cta">
-          <h3 style={{ position: "relative" }}>Use Your Gifts to Make a Difference</h3>
-          <p>Get involved and join us in the mission to lead people into a growing relationship with Jesus. There's a place for you here.</p>
-          <button className="btn btn-accent" style={{ position: "relative" }} onClick={() => go("contact")}>Find Your Place →</button>
-        </div></Fade>
-      </section>
+
 
       <section className="sec" id="contact" style={{ background: "var(--sky-light)", maxWidth: "none", padding: "100px 36px" }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
