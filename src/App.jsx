@@ -2,22 +2,25 @@ import { useState, useEffect, useRef } from "react";
 
 /* ───────── YOUTUBE CONFIG ───────── */
 const YT_API_KEY = "AIzaSyDeCJS_Ysga2z9c1CucEaukxCCzxxSGOeo";
-const YT_HANDLE = "thegatheringnwi";           // your channel handle (no @)
+const YT_HANDLE = "thegatheringnwi";
+const YT_SERMONS_PLAYLIST = ""; // paste your Sermons playlist ID here e.g. PLxxxxxxxx
 
 async function fetchLatestSermon(apiKey = YT_API_KEY, handle = YT_HANDLE) {
-  if (!apiKey || !handle) return null;
+  if (!apiKey) return null;
   try {
-    // Step 1: resolve handle → channel details
-    const chRes = await fetch(
-      `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forHandle=${handle}&key=${apiKey}`
-    );
-    const chData = await chRes.json();
-    const uploadsId = chData.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
-    if (!uploadsId) return null;
+    let playlistId = YT_SERMONS_PLAYLIST;
 
-    // Step 2: get latest video from uploads playlist
+    if (!playlistId) {
+      const chRes = await fetch(
+        `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&forHandle=${handle}&key=${apiKey}`
+      );
+      const chData = await chRes.json();
+      playlistId = chData.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
+    }
+    if (!playlistId) return null;
+
     const plRes = await fetch(
-      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=1&playlistId=${uploadsId}&key=${apiKey}`
+      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=1&playlistId=${playlistId}&key=${apiKey}`
     );
     const plData = await plRes.json();
     const item = plData.items?.[0]?.snippet;
@@ -55,7 +58,7 @@ const EXPECT = [
   { icon: "⏰", title: "Arrive by 10:20", desc: "Grab coffee, find a seat, and settle in before service starts at 10:30 AM." },
   { icon: "👕", title: "Come as You Are", desc: "Jeans, dress clothes, whatever — we care about you, not your outfit." },
   { icon: "🎵", title: "Worship & Teaching", desc: "Contemporary worship followed by Bible-centered, practical teaching." },
-  { icon: "👶", title: "Kids Are Covered", desc: "Nursery (0–3) for full service. Kids' Praise (4–9) starts after worship. Youth Group (10+) meets every other Sunday morning." },
+  { icon: "👶", title: "Kids Are Covered", desc: "Children are an important part of the family here at The Gathering! We offer Nursery (ages 0–3) for the full service and Kids' Praise (ages 4–9) after worship. Youth Group (10+) meets every other Sunday morning." },
   { icon: "☕", title: "Stay & Connect", desc: "Hang around after! We'd love to meet you and answer any questions." },
   { icon: "📱", title: "Church Center App", desc: "Download for events, groups, giving, and staying connected all week." },
 ];
@@ -151,8 +154,6 @@ export default function TheGatheringNWI() {
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}body{margin:0}
 .root{font-family:var(--body);color:var(--text);background:var(--bg);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-
-/* NAV */
 .nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:all .35s}
 .nav.scrolled{background:rgba(248,249,251,.97);backdrop-filter:blur(14px);box-shadow:0 1px 24px rgba(30,30,46,.06)}
 .nav-in{max-width:1260px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;transition:padding .3s}
@@ -170,7 +171,6 @@ html{scroll-behavior:smooth}body{margin:0}
 .nav-cta:hover{background:#fff;color:var(--charcoal);box-shadow:0 4px 16px rgba(59,159,217,.25)}
 .nav.scrolled .nav-cta{background:var(--charcoal);color:#fff}
 .nav.scrolled .nav-cta:hover{background:var(--sky)}
-
 .ham{display:none;background:none;border:none;cursor:pointer;width:32px;height:32px;position:relative;z-index:200}
 .ham span{display:block;width:22px;height:2px;position:absolute;left:5px;transition:all .3s;background:#fff}
 .nav.scrolled .ham span{background:var(--charcoal)}
@@ -181,8 +181,6 @@ html{scroll-behavior:smooth}body{margin:0}
 .mob-menu{position:fixed;inset:0;background:rgba(248,249,251,.98);backdrop-filter:blur(20px);z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;opacity:0;pointer-events:none;transition:opacity .35s}
 .mob-menu.open{opacity:1;pointer-events:all}
 .mob-menu a{font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:2px;text-decoration:none;color:var(--charcoal);cursor:pointer}
-
-/* HERO */
 .hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--charcoal-deep)}
 .hero-bg{position:absolute;inset:0;background:linear-gradient(160deg,#14141f 0%,#1e1e2e 30%,#2a2a3a 60%,#33334a 100%)}
 .hero-grain{position:absolute;inset:0;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
@@ -199,32 +197,24 @@ html{scroll-behavior:smooth}body{margin:0}
 .hero-meta{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;gap:40px;z-index:2}
 .hero-mi{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:rgba(255,255,255,.35);letter-spacing:.5px}
 .hero-mi .dot{width:5px;height:5px;border-radius:50%;background:var(--sky)}
-
-/* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 30px;border-radius:6px;font-size:13px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:all .3s;border:none;font-family:var(--body)}
 .btn-accent{background:var(--sky);color:#fff}
 .btn-accent:hover{background:#2d8cc6;transform:translateY(-2px);box-shadow:0 8px 24px rgba(59,159,217,.3)}
-.btn-white{background:#fff;color:var(--charcoal)}
-.btn-white:hover{background:var(--sky);color:#fff;transform:translateY(-2px)}
 .btn-ghost{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.2)}
 .btn-ghost:hover{border-color:var(--sky);color:var(--sky)}
 .btn-outline{background:transparent;color:var(--charcoal);border:1.5px solid var(--border)}
 .btn-outline:hover{border-color:var(--sky);color:var(--sky)}
 .btn-dark{background:var(--charcoal);color:#fff}
 .btn-dark:hover{background:var(--charcoal-deep);transform:translateY(-2px);box-shadow:0 6px 20px rgba(30,30,46,.2)}
-
-/* QUICK BAR */
 .qbar{padding:0 36px;margin-top:-52px;position:relative;z-index:10}
 .qbar-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);background:var(--card);border-radius:var(--radius-lg);box-shadow:0 8px 48px rgba(30,30,46,.07);overflow:hidden}
-.qi{padding:32px 20px;text-align:center;cursor:pointer;transition:all .3s;border-right:1px solid var(--border);position:relative}
+.qi{padding:32px 20px;text-align:center;cursor:pointer;transition:all .3s;border-right:1px solid var(--border)}
 .qi:last-child{border-right:none}
 .qi:hover{background:var(--sky-light)}
 .qi:hover .qi-icon{background:var(--sky);color:#fff}
 .qi-icon{width:48px;height:48px;border-radius:14px;background:var(--charcoal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;margin:0 auto 14px;transition:all .3s}
 .qi h4{font-size:14px;font-weight:700;margin-bottom:3px;color:var(--charcoal)}
 .qi p{font-size:12px;color:var(--muted)}
-
-/* SECTIONS */
 .sec{padding:100px 36px;max-width:1120px;margin:0 auto}
 .sec-h{margin-bottom:56px}
 .sec-h.c{text-align:center}
@@ -232,8 +222,6 @@ html{scroll-behavior:smooth}body{margin:0}
 .sec-title{font-family:var(--head);font-size:clamp(30px,4.5vw,48px);font-weight:600;line-height:1.12;color:var(--charcoal);margin-bottom:14px}
 .sec-desc{font-size:16px;line-height:1.75;color:var(--text-lt);max-width:560px;font-weight:300}
 .sec-h.c .sec-desc{margin:0 auto}
-
-/* SERMON */
 .sermon{display:grid;grid-template-columns:1.1fr 1fr;background:var(--card);border-radius:var(--radius-lg);overflow:hidden;box-shadow:0 4px 36px rgba(30,30,46,.05)}
 .sermon-thumb{background:linear-gradient(135deg,var(--charcoal-deep),#33334a);display:flex;align-items:center;justify-content:center;position:relative;min-height:320px;cursor:pointer}
 .sermon-thumb:hover .play{transform:scale(1.1);background:var(--sky);border-color:var(--sky)}
@@ -247,18 +235,10 @@ html{scroll-behavior:smooth}body{margin:0}
 .sermon-info .date{font-size:13px;color:var(--muted);margin-bottom:24px}
 .sermon-info .sd{font-size:14px;line-height:1.75;color:var(--text-lt);margin-bottom:28px;font-weight:300}
 .sermon-btns{display:flex;gap:12px;flex-wrap:wrap}
-
-/* ABOUT */
 .about-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:64px;align-items:center}
 .about-text p{font-size:15px;line-height:1.85;color:var(--text-lt);margin-bottom:16px;font-weight:300}
 .about-quote{font-family:var(--head);font-size:20px;font-style:italic;color:var(--charcoal);border-left:3px solid var(--sky);padding:16px 0 16px 24px;margin:28px 0;line-height:1.5}
 .about-quote cite{display:block;font-family:var(--body);font-size:13px;font-style:normal;color:var(--muted);margin-top:8px}
-.about-vid{border-radius:var(--radius-lg);aspect-ratio:4/3;background:linear-gradient(145deg,var(--charcoal-deep),#33334a);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;cursor:pointer}
-.about-vid::after{content:'Watch Our Story';position:absolute;bottom:24px;left:0;right:0;text-align:center;color:rgba(255,255,255,.5);font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase}
-.about-vid:hover .play{transform:scale(1.1);background:var(--sky);border-color:var(--sky)}
-.about-vid .play{width:64px;height:64px}
-
-/* BELIEFS */
 .beliefs-bg{background:var(--charcoal);padding:100px 0}
 .acc{border-bottom:1px solid rgba(255,255,255,.07);cursor:pointer;max-width:720px;margin:0 auto}
 .acc-h{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
@@ -268,18 +248,12 @@ html{scroll-behavior:smooth}body{margin:0}
 .acc-b{max-height:0;overflow:hidden;transition:max-height .45s ease,padding .35s}
 .acc-b.open{max-height:300px;padding:0 0 22px}
 .acc-b p{font-size:15px;line-height:1.8;color:rgba(255,255,255,.5);font-weight:300}
-
-
-
-/* EXPECT */
 .exp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .exp-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px 24px;transition:all .3s}
 .exp-card:hover{border-color:var(--sky);transform:translateY(-4px);box-shadow:0 12px 32px rgba(59,159,217,.08)}
 .exp-card .ei{font-size:28px;margin-bottom:14px;display:block}
 .exp-card h4{font-size:15px;font-weight:700;color:var(--charcoal);margin-bottom:6px}
 .exp-card p{font-size:13px;line-height:1.7;color:var(--text-lt);font-weight:300}
-
-/* GROUPS */
 .grp-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .grp{padding:32px;border:1px solid var(--border);border-radius:var(--radius);background:var(--card);transition:all .3s}
 .grp:hover{border-color:var(--sky);box-shadow:0 8px 28px rgba(59,159,217,.06)}
@@ -287,8 +261,6 @@ html{scroll-behavior:smooth}body{margin:0}
 .grp h4{font-size:16px;font-weight:700;color:var(--charcoal);margin-bottom:8px}
 .grp p{font-size:14px;line-height:1.7;color:var(--text-lt);font-weight:300;margin-bottom:14px}
 .grp .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--sky);padding:4px 12px;background:var(--sky-light);border-radius:100px}
-
-/* EVENTS */
 .ev-bg{background:var(--sky-light)}
 .ev-list{display:flex;flex-direction:column;gap:10px}
 .ev{display:flex;align-items:center;gap:24px;padding:18px 24px;background:var(--card);border-radius:var(--radius);border:1px solid var(--border);transition:all .3s}
@@ -300,19 +272,13 @@ html{scroll-behavior:smooth}body{margin:0}
 .ev-info h4{font-size:15px;font-weight:600;color:var(--charcoal);margin-bottom:2px}
 .ev-info p{font-size:13px;color:var(--muted);font-weight:300}
 .ev-tag{margin-left:auto;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--sky);padding:4px 12px;background:var(--sky-light);border-radius:100px;white-space:nowrap}
-
-/* PRAYER */
 .pray-banner{background:var(--charcoal);border-radius:var(--radius-lg);padding:56px 48px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap}
 .pray-banner h3{font-family:var(--head);font-size:30px;font-weight:600;color:#fff}
 .pray-banner p{font-size:15px;color:rgba(255,255,255,.5);font-weight:300;margin-top:8px;max-width:440px}
-
-/* SERVE */
 .serve-cta{text-align:center;background:linear-gradient(160deg,var(--charcoal-deep),var(--charcoal),var(--charcoal-mid));border-radius:var(--radius-lg);padding:80px 48px;color:#fff;position:relative;overflow:hidden}
 .serve-cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 130%,rgba(59,159,217,.12),transparent 55%)}
 .serve-cta h3{font-family:var(--head);font-size:36px;font-weight:600;margin-bottom:14px;position:relative}
 .serve-cta p{font-size:16px;color:rgba(255,255,255,.55);font-weight:300;max-width:500px;margin:0 auto 32px;position:relative;line-height:1.7}
-
-/* CONTACT */
 .ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
 .ct-details{display:flex;flex-direction:column;gap:18px}
 .ct-d{display:flex;gap:16px;align-items:flex-start}
@@ -330,8 +296,6 @@ html{scroll-behavior:smooth}body{margin:0}
 .ff label{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
 .ff input,.ff textarea{padding:12px 14px;border:1px solid var(--border);border-radius:6px;font-size:14px;font-family:var(--body);color:var(--text);background:var(--bg);transition:border-color .3s;outline:none;resize:vertical}
 .ff input:focus,.ff textarea:focus{border-color:var(--sky)}
-
-/* FOOTER */
 .foot{background:var(--charcoal-deep);color:#fff;padding:72px 36px 40px}
 .foot-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;gap:48px}
 .f-logo{font-family:var(--head);font-size:24px;font-weight:700;margin-bottom:12px}
@@ -343,8 +307,6 @@ html{scroll-behavior:smooth}body{margin:0}
 .foot-bot{max-width:1120px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 .foot-bot p{font-size:12px;color:rgba(255,255,255,.2)}
 .foot-bot a{color:rgba(255,255,255,.25);text-decoration:none}
-
-/* MODAL */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
 .modal{background:#fff;border-radius:var(--radius-lg);padding:40px;max-width:480px;width:100%;position:relative}
 .modal-x{position:absolute;top:16px;right:16px;background:none;border:none;font-size:18px;color:var(--muted);cursor:pointer}
@@ -352,12 +314,8 @@ html{scroll-behavior:smooth}body{margin:0}
 .modal-sub{font-size:14px;color:var(--muted);margin-bottom:20px;font-weight:300}
 .modal input,.modal textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:6px;font-size:14px;font-family:var(--body);color:var(--text);margin-bottom:12px;outline:none;resize:vertical;background:var(--bg)}
 .modal input:focus,.modal textarea:focus{border-color:var(--sky)}
-
-/* PRAYER FAB */
 .fab{position:fixed;bottom:24px;right:24px;z-index:50;background:var(--sky);color:#fff;border:none;width:56px;height:56px;border-radius:50%;font-size:24px;cursor:pointer;box-shadow:0 4px 24px rgba(59,159,217,.35);transition:all .3s;display:flex;align-items:center;justify-content:center}
 .fab:hover{transform:scale(1.1);box-shadow:0 6px 32px rgba(59,159,217,.5)}
-
-/* RESPONSIVE */
 @media(max-width:1000px){
   .nav-links,.nav-cta{display:none}.ham{display:block}
   .sermon{grid-template-columns:1fr}.about-grid,.ct-grid{grid-template-columns:1fr}
@@ -373,31 +331,28 @@ html{scroll-behavior:smooth}body{margin:0}
 }
       `}</style>
 
-      {/* YOUTUBE CONFIG BANNER */}
       {showConfig && (
         <div style={{ background: "#fffbeb", borderBottom: "1px solid #fde68a", padding: "14px 36px", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap", position: "relative", zIndex: 99 }}>
           <span style={{ fontSize: 13, fontWeight: 700, color: "#92400e" }}>⚙️ Connect YouTube:</span>
           <input placeholder="API Key" defaultValue={ytKey} onChange={e => setYtKey(e.target.value)} style={{ padding: "7px 12px", border: "1px solid #fde68a", borderRadius: 6, fontSize: 12, width: 260, fontFamily: "monospace" }} />
-          <button onClick={async () => {           const s = await fetchLatestSermon(ytKey); setSermon(s); if (s) setShowConfig(false); }} style={{ padding: "7px 18px", background: "#d97706", color: "#fff", border: "none", borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>Connect</button>
+          <button onClick={async () => { const s = await fetchLatestSermon(ytKey); setSermon(s); if (s) setShowConfig(false); }} style={{ padding: "7px 18px", background: "#d97706", color: "#fff", border: "none", borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: "pointer" }}>Connect</button>
           <button onClick={() => setShowConfig(false)} style={{ background: "none", border: "none", fontSize: 16, cursor: "pointer", color: "#92400e" }}>✕</button>
         </div>
       )}
 
-      {/* NAV */}
       <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
         <div className="nav-in">
           <a className="logo" onClick={() => go("home")}>The Gathering <em>NWI</em></a>
           <ul className="nav-links">{NAV.map(l => <li key={l.id}><a onClick={() => go(l.id)}>{l.label}</a></li>)}</ul>
-          <button className="nav-cta" onClick={() => window.open("https://thegatheringnwi.churchcenter.com/", "_blank")}>Give</button>
+          <button className="nav-cta" onClick={() => window.open("https://thegatheringnwi.churchcenter.com/giving", "_blank")}>Give</button>
           <button className={`ham ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu"><span /><span /><span /></button>
         </div>
       </nav>
       <div className={`mob-menu ${menuOpen ? "open" : ""}`}>
         {NAV.map(l => <a key={l.id} onClick={() => go(l.id)}>{l.label}</a>)}
-        <a onClick={() => window.open("https://thegatheringnwi.churchcenter.com/", "_blank")} style={{ color: "var(--sky)" }}>Give Online</a>
+        <a onClick={() => window.open("https://thegatheringnwi.churchcenter.com/giving", "_blank")} style={{ color: "var(--sky)" }}>Give Online</a>
       </div>
 
-      {/* HERO */}
       <section className="hero" id="home">
         <div className="hero-bg" /><div className="hero-grain" /><div className="hero-glow" /><div className="hero-lines" />
         <div className="hero-content">
@@ -416,13 +371,36 @@ html{scroll-behavior:smooth}body{margin:0}
         </div>
       </section>
 
+      {/* INFO BAR */}
+      <div style={{ background: "var(--charcoal)", borderBottom: "1px solid rgba(255,255,255,.06)", padding: "14px 36px" }}>
+        <div style={{ maxWidth: 1120, margin: "0 auto", display: "flex", flexWrap: "wrap", gap: "24px 48px", justifyContent: "center" }}>
+          {[
+            { icon: "⏰", label: "Services", value: "Every Sunday 10:30am" },
+            { icon: "📍", label: "Find Us", value: "360 E Lincoln Hwy, Schererville, IN 46375", href: "https://www.google.com/maps?saddr=My+Location&daddr=360+East+Lincoln+Highway+Schererville+IN+46375" },
+            { icon: "📞", label: "Call Us", value: "(219) 765-2124", href: "tel:2197652124" },
+            { icon: "✉️", label: "Email Us", value: "gatheringchurchnwi@gmail.com", href: "mailto:gatheringchurchnwi@gmail.com" },
+          ].map(item => (
+            <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <span style={{ fontSize: 16 }}>{item.icon}</span>
+              <div>
+                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: "rgba(255,255,255,.3)" }}>{item.label}</div>
+                {item.href
+                  ? <a href={item.href} target="_blank" rel="noopener noreferrer" style={{ fontSize: 13, color: "var(--sky)", textDecoration: "none", fontWeight: 500 }}>{item.value}</a>
+                  : <div style={{ fontSize: 13, color: "rgba(255,255,255,.7)", fontWeight: 500 }}>{item.value}</div>
+                }
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* QUICK BAR */}
       <div className="qbar"><Fade><div className="qbar-in">
         {[
           { icon: "🗓", title: "Plan Your Visit", desc: "What to expect Sunday", id: "visit" },
-          { icon: "📖", title: "Latest Sermon", desc: "Faith That Works series", id: "sermons" },
+          { icon: "📖", title: "Latest Sermon", desc: "Watch this week's message", id: "sermons" },
           { icon: "🤝", title: "Join a Group", desc: "Find your community", url: "https://thegatheringnwi.churchcenter.com/groups" },
-          { icon: "💛", title: "Give Online", desc: "Support the mission", url: "https://thegatheringnwi.churchcenter.com/" },
+          { icon: "💬", title: "Connect With Us", desc: "Follow us on Facebook", url: "https://www.facebook.com/thegatheringnwi" },
         ].map(q => (
           <div key={q.title} className="qi" onClick={() => q.url ? window.open(q.url, "_blank") : go(q.id)}>
             <div className="qi-icon">{q.icon}</div><h4>{q.title}</h4><p>{q.desc}</p>
@@ -430,19 +408,18 @@ html{scroll-behavior:smooth}body{margin:0}
         ))}
       </div></Fade></div>
 
-      {/* SERMON */}
       <section className="sec" id="sermons">
         <Fade><div className="sec-h"><div className="sec-lab">This Week</div><h2 className="sec-title">Latest Sermon</h2></div></Fade>
         <Fade delay={.1}><div className="sermon">
           {sermon ? (
             <>
-              <div className="sermon-thumb" style={{ cursor: "pointer" }} onClick={() => window.open(`https://youtube.com/watch?v=${sermon.videoId}`, "_blank")}>
+              <div className="sermon-thumb" onClick={() => window.open(`https://youtube.com/watch?v=${sermon.videoId}`, "_blank")}>
                 {sermon.thumb && <img src={sermon.thumb} alt={sermon.title} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: .7 }} />}
                 <div className="sermon-badge">Latest Sermon</div>
                 <div className="play"><svg width="28" height="28" viewBox="0 0 24 24"><polygon points="8,5 20,12 8,19" /></svg></div>
               </div>
               <div className="sermon-info">
-                <div className="sn">Faith That Works — A Study in James</div>
+                <div className="sn">The Gathering NWI</div>
                 <h3>{sermon.title}</h3>
                 <div className="speaker">The Gathering NWI</div>
                 <div className="date">{sermon.date}</div>
@@ -463,10 +440,9 @@ html{scroll-behavior:smooth}body{margin:0}
                 <div style={{ position: "absolute", bottom: 20, left: 0, right: 0, textAlign: "center" }}><button onClick={() => setShowConfig(true)} style={{ background: "rgba(255,255,255,.15)", border: "1px solid rgba(255,255,255,.3)", color: "#fff", padding: "8px 18px", borderRadius: 6, fontSize: 12, cursor: "pointer", fontWeight: 600 }}>⚙️ Connect YouTube</button></div>
               </div>
               <div className="sermon-info">
-                <div className="sn">Faith That Works — A Study in James</div>
-                <h3>The Power of Our Words</h3>
-                <div className="speaker">Pastor Shawn Evers</div>
-                <div className="date">James 3</div>
+                <div className="sn">The Gathering NWI</div>
+                <h3>Latest Sermon</h3>
+                <div className="speaker">The Gathering NWI</div>
                 <p className="sd">Connect your YouTube channel above to automatically display your latest sermon here every week.</p>
                 <div className="sermon-btns">
                   <a className="btn btn-accent" href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Watch on Facebook</a>
@@ -477,7 +453,6 @@ html{scroll-behavior:smooth}body{margin:0}
         </div></Fade>
       </section>
 
-      {/* ABOUT */}
       <section className="sec" id="about" style={{ background: "var(--sky-light)", maxWidth: "none", padding: "100px 36px" }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
           <div className="about-grid">
@@ -485,12 +460,29 @@ html{scroll-behavior:smooth}body{margin:0}
               <div className="sec-lab">Our Story</div>
               <h2 className="sec-title">Welcome to<br />The Gathering</h2>
               <p>We are excited for your first visit and a chance to meet you! Visiting somewhere new can be intimidating. We hope you find we are a community of people that are welcoming, loving, and ready to serve you and your family.</p>
-              <p>The Gathering Church is more than just a place of worship — it's a community where everyone is welcome. Our mission is to lead people into a growing relationship with Jesus.</p>
+              <p>No matter where you've been or what you've been through, there's a place for you here. Come as you are — we'd love to meet you.</p>
               <div className="about-quote">"In a world where everyone is 'virtually connected,' in-person connections seem harder than ever. That's why we started The Gathering — imperfect people trying to follow what Jesus said."<cite>— Shawn &amp; Kelly Evers, Founders</cite></div>
               <button className="btn btn-dark" onClick={() => go("visit")}>Plan Your First Visit</button>
             </div></Fade>
-            <Fade delay={.15}><div className="about-vid"><div className="play"><svg width="22" height="22" viewBox="0 0 24 24"><polygon points="8,5 20,12 8,19" fill="#fff" /></svg></div></div></Fade>
+            <Fade delay={.15}><div style={{ borderRadius: "var(--radius-lg)", aspectRatio: "4/3", background: "linear-gradient(145deg,var(--charcoal-deep),#33334a)", display: "flex", alignItems: "center", justifyContent: "center", padding: 40 }}>
+              <div style={{ textAlign: "center", color: "rgba(255,255,255,.4)" }}>
+                <div style={{ fontSize: 48, marginBottom: 12 }}>✝️</div>
+                <p style={{ fontSize: 14, fontWeight: 300 }}>Schererville, Indiana</p>
+              </div>
+            </div></Fade>
           </div>
+        </div>
+      </section>
+
+      {/* WHAT TO EXPECT */}
+      <section className="sec" id="visit">
+        <Fade><div className="sec-h c">
+          <div className="sec-lab">Your First Visit</div>
+          <h2 className="sec-title">What to Expect</h2>
+          <p className="sec-desc">We know visiting a new church can feel nerve-wracking. Here's everything you need to know so you can walk in with confidence.</p>
+        </div></Fade>
+        <div className="exp-grid">
+          {EXPECT.map((e, i) => <Fade key={e.title} delay={i * .05}><div className="exp-card"><span className="ei">{e.icon}</span><h4>{e.title}</h4><p>{e.desc}</p></div></Fade>)}
         </div>
       </section>
 
@@ -506,19 +498,6 @@ html{scroll-behavior:smooth}body{margin:0}
         </section>
       </div>
 
-      {/* WHAT TO EXPECT */}
-      <section className="sec" id="visit">
-        <Fade><div className="sec-h c">
-          <div className="sec-lab">Your First Visit</div>
-          <h2 className="sec-title">What to Expect</h2>
-          <p className="sec-desc">We know visiting a new church can feel nerve-wracking. Here's everything you need to know so you can walk in with confidence.</p>
-        </div></Fade>
-        <div className="exp-grid">
-          {EXPECT.map((e, i) => <Fade key={e.title} delay={i * .05}><div className="exp-card"><span className="ei">{e.icon}</span><h4>{e.title}</h4><p>{e.desc}</p></div></Fade>)}
-        </div>
-      </section>
-
-      {/* GROUPS */}
       <section className="sec" id="groups">
         <Fade><div className="sec-h c">
           <div className="sec-lab">Get Connected</div>
@@ -527,16 +506,15 @@ html{scroll-behavior:smooth}body{margin:0}
         </div></Fade>
         <div className="grp-grid">
           {[
-            { icon: "📖", title: "Small Groups", desc: "Weekly gatherings to dive deeper into Scripture, share life, and pray for each other in a safe, authentic space.", tag: "Weekly" },
-            { icon: "👶", title: "Nursery", desc: "A loving, safe environment where your littlest ones are cared for during the entire service so you can worship with peace of mind.", tag: "Ages 0–3" },
-            { icon: "🌟", title: "Kids' Praise", desc: "After worship, kids head to a fun, engaging class where they learn about Jesus through stories, songs, crafts, and activities.", tag: "Ages 4–9" },
+            { icon: "📖", title: "Small Groups", desc: "Weekly gatherings to dive deeper into Scripture, share life, and pray for each other in a safe, authentic space.", tag: "Weekly", url: "https://thegatheringnwi.churchcenter.com/groups" },
+            { icon: "👶", title: "Nursery", desc: "A loving, safe environment for children ages 0–3 for the entire service so you can worship with peace of mind.", tag: "Ages 0–3" },
+            { icon: "🌟", title: "Kids' Praise", desc: "Children are an important part of the family here! After worship, kids ages 4–9 head to a fun class where they learn about Jesus through God's Word, worship, and prayer.", tag: "Ages 4–9" },
             { icon: "🙌", title: "Youth Group", desc: "A dedicated space for older kids to ask big questions, build real friendships, and grow in their faith together.", tag: "Ages 10+ · Every Other Sunday" },
             { icon: "🤝", title: "Serve Teams", desc: "From community outreach to helping with Sunday services, there are several teams available for you to make a difference.", tag: "Multiple Teams" },
-          ].map((g, i) => <Fade key={g.title} delay={i * .06}><div className="grp"><div className="gi">{g.icon}</div><h4>{g.title}</h4><p>{g.desc}</p><span className="tag">{g.tag}</span></div></Fade>)}
+          ].map((g, i) => <Fade key={g.title} delay={i * .06}><div className="grp" style={{ cursor: g.url ? "pointer" : "default" }} onClick={() => g.url && window.open(g.url, "_blank")}><div className="gi">{g.icon}</div><h4>{g.title}</h4><p>{g.desc}</p><span className="tag">{g.tag}</span></div></Fade>)}
         </div>
       </section>
 
-      {/* EVENTS */}
       <div className="ev-bg" id="events">
         <section className="sec" style={{ maxWidth: 1120, padding: "100px 36px" }}>
           <Fade><div className="sec-h" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 20 }}>
@@ -553,7 +531,6 @@ html{scroll-behavior:smooth}body{margin:0}
         </section>
       </div>
 
-      {/* PRAYER */}
       <section className="sec">
         <Fade><div className="pray-banner">
           <div><h3>🙏 Need Prayer?</h3><p>Whatever you're walking through, you don't have to carry it alone. Our prayer team would be honored to pray for you.</p></div>
@@ -561,7 +538,6 @@ html{scroll-behavior:smooth}body{margin:0}
         </div></Fade>
       </section>
 
-      {/* SERVE */}
       <section className="sec" id="serve" style={{ paddingTop: 0 }}>
         <Fade><div className="serve-cta">
           <h3 style={{ position: "relative" }}>Use Your Gifts to Make a Difference</h3>
@@ -570,18 +546,18 @@ html{scroll-behavior:smooth}body{margin:0}
         </div></Fade>
       </section>
 
-      {/* CONTACT */}
       <section className="sec" id="contact" style={{ background: "var(--sky-light)", maxWidth: "none", padding: "100px 36px" }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
           <Fade><div className="sec-h"><div className="sec-lab">Reach Out</div><h2 className="sec-title">We'd Love to<br />Hear from You</h2></div></Fade>
           <div className="ct-grid">
             <Fade><div className="ct-details">
               {[
-                { icon: "📍", h: "Location", p: "Schererville, Indiana" },
+                { icon: "📍", h: "Location", p: "360 E Lincoln Hwy, Schererville, IN 46375" },
                 { icon: "⏰", h: "Service Time", p: "Every Sunday at 10:30 AM" },
+                { icon: "📞", h: "Phone", p: <a href="tel:2197652124">(219) 765-2124</a> },
+                { icon: "✉️", h: "Email", p: <a href="mailto:gatheringchurchnwi@gmail.com">gatheringchurchnwi@gmail.com</a> },
                 { icon: "📺", h: "Watch Online", p: <a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Facebook Live every Sunday →</a> },
                 { icon: "📱", h: "Church Center", p: <a href="https://thegatheringnwi.churchcenter.com/" target="_blank" rel="noopener noreferrer">Download the app for groups, events & giving →</a> },
-                { icon: "💬", h: "Social", p: <a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Follow us on Facebook →</a> },
               ].map(d => <div className="ct-d" key={d.h}><div className="ci">{d.icon}</div><div><h5>{d.h}</h5><p>{d.p}</p></div></div>)}
             </div></Fade>
             <Fade delay={.15}><div className="ct-form">
@@ -596,7 +572,6 @@ html{scroll-behavior:smooth}body{margin:0}
         </div>
       </section>
 
-      {/* FOOTER */}
       <footer className="foot">
         <div className="foot-in">
           <div className="foot-brand"><div className="f-logo">The Gathering <em>NWI</em></div><p>A church on mission to lead people into a growing relationship with Jesus Christ. Schererville, Indiana.</p></div>
@@ -605,12 +580,13 @@ html{scroll-behavior:smooth}body{margin:0}
             <a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Facebook</a>
             <a href="https://thegatheringnwi.churchcenter.com/" target="_blank" rel="noopener noreferrer">Church Center</a>
             <a onClick={() => setPrayerOpen(true)}>Prayer Request</a>
-            <a href="https://thegatheringnwi.churchcenter.com/" target="_blank" rel="noopener noreferrer">Give Online</a>
+            <a href="https://thegatheringnwi.churchcenter.com/giving" target="_blank" rel="noopener noreferrer">Give Online</a>
           </div>
           <div className="foot-col"><h5>Visit</h5>
-            <a>Schererville, IN</a><a>Sundays at 10:30 AM</a>
+            <a>360 E Lincoln Hwy</a>
+            <a>Schererville, IN 46375</a>
+            <a>Sundays at 10:30 AM</a>
             <a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Watch Live</a>
-            <a onClick={() => go("visit")}>What to Expect</a>
           </div>
         </div>
         <div className="foot-bot">
@@ -619,8 +595,7 @@ html{scroll-behavior:smooth}body{margin:0}
         </div>
       </footer>
 
-      {/* FAB + MODAL */}
-      <button className="fab" onClick={() => setPrayerOpen(true)} aria-label="Prayer Request" title="Submit a Prayer Request">🙏</button>
+      <button className="fab" onClick={() => setPrayerOpen(true)} aria-label="Prayer Request">🙏</button>
       <PrayerModal open={prayerOpen} onClose={() => setPrayerOpen(false)} />
     </div>
   );
