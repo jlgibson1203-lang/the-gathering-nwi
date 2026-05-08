@@ -492,7 +492,52 @@ html{scroll-behavior:smooth}body{margin:0}
         </div></Fade>
       </section>
 
-      {/* ABOUT */}
+      {/* WHAT TO EXPECT */}
+      <section className="sec" id="visit">
+        <Fade><div className="sec-h c">
+          <div className="sec-lab">Your First Visit</div>
+          <h2 className="sec-title">What to Expect</h2>
+          <p className="sec-desc">We know visiting a new church can feel nerve-wracking. Here's everything you need to know so you can walk in with confidence.</p>
+        </div></Fade>
+        <div className="exp-grid">
+          {EXPECT.map((e, i) => <Fade key={e.title} delay={i * .05}><div className="exp-card"><span className="ei">{e.icon}</span><h4>{e.title}</h4><p>{e.desc}</p></div></Fade>)}
+        </div>
+      </section>
+
+      {/* LET US KNOW YOU'RE COMING */}
+      <section className="sec" style={{ paddingTop: 0 }}>
+        <Fade><div className="ct-form" style={{ maxWidth: 560, margin: "0 auto" }}>
+          <h4 style={{ textAlign: "center" }}>Let Us Know You're Coming</h4><p className="sub" style={{ textAlign: "center" }}>We can't wait to see you!</p>
+          <form onSubmit={handleContactSubmit}>
+            <input type="hidden" name="_subject" value="📋 Plan Your Visit" />
+            <div className="fr"><div className="ff"><label>First Name</label><input type="text" name="firstName" placeholder="First" required /></div><div className="ff"><label>Last Name</label><input type="text" name="lastName" placeholder="Last" required /></div></div>
+            <div className="fr"><div className="ff full"><label>Email</label><input type="email" name="email" placeholder="you@email.com" required /></div></div>
+            <div className="fr"><div className="ff full"><label>Phone (optional)</label><input type="tel" name="phone" placeholder="(555) 123-4567" /></div></div>
+            <div className="fr"><div className="ff full"><label>Questions / Comments</label><textarea rows={4} name="message" placeholder="Anything you'd like us to know?" /></div></div>
+            <button className="btn btn-dark" type="submit" style={{ width: "100%", justifyContent: "center", marginTop: 8 }}>Submit</button>
+          </form>
+        </div></Fade>
+      </section>
+
+      {/* FIND YOUR COMMUNITY */}
+      <section className="sec" id="groups">
+        <Fade><div className="sec-h c">
+          <div className="sec-lab">Get Connected</div>
+          <h2 className="sec-title">Find Your Community</h2>
+          <p className="sec-desc">Every week we have options for men and women to gather in order to build relationships, learn about Jesus, and pray for each other.</p>
+        </div></Fade>
+        <div className="grp-grid">
+          {[
+            { icon: "📖", title: "Small Groups", desc: "Weekly gatherings to dive deeper into Scripture, share life, and pray for each other in a safe, authentic space.", tag: "Weekly", url: "https://thegatheringnwi.churchcenter.com/groups" },
+            { icon: "👶", title: "Nursery", desc: "A loving, safe environment for children ages 0–3 for the entire service so you can worship with peace of mind.", tag: "Ages 0–3" },
+            { icon: "🌟", title: "Kids' Praise", desc: "Children are an important part of the family here! After worship, kids ages 4–9 head to a fun class where they learn about Jesus through God's Word, worship, and prayer.", tag: "Ages 4–9" },
+            { icon: "🙌", title: "Youth Group", desc: "A dedicated space for older kids to ask big questions, build real friendships, and grow in their faith together.", tag: "Ages 10+ · Every Other Sunday" },
+            { icon: "🤝", title: "Serve Teams", desc: "From community outreach to helping with Sunday services, there are several teams available for you to make a difference.", tag: "Multiple Teams" },
+          ].map((g, i) => <Fade key={g.title} delay={i * .06}><div className="grp" style={{ cursor: g.url ? "pointer" : "default" }} onClick={() => g.url && window.open(g.url, "_blank")}><div className="gi">{g.icon}</div><h4>{g.title}</h4><p>{g.desc}</p><span className="tag">{g.tag}</span></div></Fade>)}
+        </div>
+      </section>
+
+      {/* ABOUT US (combined: story + blurb + pastors) */}
       <section className="sec" id="about" style={{ background: "var(--sky-light)", maxWidth: "none", padding: "100px 36px" }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
           <Fade><div className="sec-h c">
@@ -501,19 +546,20 @@ html{scroll-behavior:smooth}body{margin:0}
             <p className="sec-desc">We are excited for your first visit and a chance to meet you! Visiting somewhere new can be intimidating. We hope you find we are a community of people that are welcoming, loving, and ready to serve you and your family. No matter where you've been or what you've been through, there's a place for you here.</p>
           </div></Fade>
 
-          {/* Community blurb */}
           <Fade delay={.1}><div style={{ background: "var(--charcoal)", borderRadius: "var(--radius-lg)", padding: "48px", marginBottom: 64, textAlign: "center" }}>
             <h3 style={{ fontFamily: "var(--head)", fontSize: 26, fontWeight: 600, color: "#fff", marginBottom: 16 }}>A Little About Us</h3>
-            <p style={{ fontSize: 15, lineHeight: 1.85, color: "rgba(255,255,255,.5)", fontWeight: 300, maxWidth: 680, margin: "0 auto 24px" }}>Don't miss the opportunity to be part of our vibrant community every Sunday at 10:30 AM CST for our live services. Experience the warmth and inspiration of our gatherings from wherever you are! And if you can't make it to our live broadcast, don't worry — we have a rich archive of past sessions available for you to explore at your convenience. Join us in celebrating faith, hope, and community!</p>
+            <p style={{ fontSize: 15, lineHeight: 1.85, color: "rgba(255,255,255,.5)", fontWeight: 300, maxWidth: 680, margin: "0 auto 24px" }}>We're a community of imperfect people learning to follow Jesus together, and we believe real growth happens through real relationships. Whether you've been walking with God for decades or you're just starting to ask questions, you belong here. We gather every Sunday in Schererville to worship, learn, and do life together — and we'd love for you to be part of it.</p>
             <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
               <a className="btn btn-accent" href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Watch Live</a>
               <a className="btn btn-ghost" href={`https://youtube.com/@${YT_HANDLE}`} target="_blank" rel="noopener noreferrer">Sermon Archive →</a>
             </div>
           </div></Fade>
 
-          {/* Pastor cards */}
+          <Fade><div className="sec-h c" style={{ marginBottom: 32 }}>
+            <div className="sec-lab">Our Pastors</div>
+            <h2 className="sec-title">Meet the Team</h2>
+          </div></Fade>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
-            {/* The Evers */}
             <Fade><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
               <div style={{ height: 220, background: "linear-gradient(145deg,var(--charcoal-deep),#33334a)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <div style={{ textAlign: "center", color: "rgba(255,255,255,.3)" }}>
@@ -527,8 +573,6 @@ html{scroll-behavior:smooth}body{margin:0}
                 <p style={{ fontSize: 14, lineHeight: 1.85, color: "var(--text-lt)", fontWeight: 300 }}>In a world where everyone is "virtually connected," in-person connections seem to be harder than ever. Through their passion for people and Jesus, Shawn and Kelly Evers started The Gathering. The hope is to create a community focused around relationships with each other and with Jesus — a community where everyone is welcome wherever they are in life; imperfect people trying to follow what Jesus said.</p>
               </div>
             </div></Fade>
-
-            {/* The Gibsons */}
             <Fade delay={.1}><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
               <div style={{ height: 220, background: "linear-gradient(145deg,#2a2a3a,var(--charcoal-mid))", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <div style={{ textAlign: "center", color: "rgba(255,255,255,.3)" }}>
@@ -546,18 +590,6 @@ html{scroll-behavior:smooth}body{margin:0}
         </div>
       </section>
 
-      {/* WHAT TO EXPECT */}
-      <section className="sec" id="visit">
-        <Fade><div className="sec-h c">
-          <div className="sec-lab">Your First Visit</div>
-          <h2 className="sec-title">What to Expect</h2>
-          <p className="sec-desc">We know visiting a new church can feel nerve-wracking. Here's everything you need to know so you can walk in with confidence.</p>
-        </div></Fade>
-        <div className="exp-grid">
-          {EXPECT.map((e, i) => <Fade key={e.title} delay={i * .05}><div className="exp-card"><span className="ei">{e.icon}</span><h4>{e.title}</h4><p>{e.desc}</p></div></Fade>)}
-        </div>
-      </section>
-
       {/* BELIEFS */}
       <div className="beliefs-bg" id="beliefs">
         <section className="sec" style={{ padding: "0 36px" }}>
@@ -569,23 +601,6 @@ html{scroll-behavior:smooth}body{margin:0}
           <Fade delay={.1}><div>{BELIEFS.map(b => <Accordion key={b.title} title={b.title} text={b.text} />)}</div></Fade>
         </section>
       </div>
-
-      <section className="sec" id="groups">
-        <Fade><div className="sec-h c">
-          <div className="sec-lab">Get Connected</div>
-          <h2 className="sec-title">Find Your Community</h2>
-          <p className="sec-desc">Every week we have options for men and women to gather in order to build relationships, learn about Jesus, and pray for each other.</p>
-        </div></Fade>
-        <div className="grp-grid">
-          {[
-            { icon: "📖", title: "Small Groups", desc: "Weekly gatherings to dive deeper into Scripture, share life, and pray for each other in a safe, authentic space.", tag: "Weekly", url: "https://thegatheringnwi.churchcenter.com/groups" },
-            { icon: "👶", title: "Nursery", desc: "A loving, safe environment for children ages 0–3 for the entire service so you can worship with peace of mind.", tag: "Ages 0–3" },
-            { icon: "🌟", title: "Kids' Praise", desc: "Children are an important part of the family here! After worship, kids ages 4–9 head to a fun class where they learn about Jesus through God's Word, worship, and prayer.", tag: "Ages 4–9" },
-            { icon: "🙌", title: "Youth Group", desc: "A dedicated space for older kids to ask big questions, build real friendships, and grow in their faith together.", tag: "Ages 10+ · Every Other Sunday" },
-            { icon: "🤝", title: "Serve Teams", desc: "From community outreach to helping with Sunday services, there are several teams available for you to make a difference.", tag: "Multiple Teams" },
-          ].map((g, i) => <Fade key={g.title} delay={i * .06}><div className="grp" style={{ cursor: g.url ? "pointer" : "default" }} onClick={() => g.url && window.open(g.url, "_blank")}><div className="gi">{g.icon}</div><h4>{g.title}</h4><p>{g.desc}</p><span className="tag">{g.tag}</span></div></Fade>)}
-        </div>
-      </section>
 
 
 
