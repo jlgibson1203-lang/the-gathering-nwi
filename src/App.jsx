@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import logo from "./the_gathering_logo.png";
 
 /* ───────── YOUTUBE CONFIG ───────── */
 const YT_API_KEY = "AIzaSyDeCJS_Ysga2z9c1CucEaukxCCzxxSGOeo";
@@ -380,7 +381,7 @@ html{scroll-behavior:smooth}body{margin:0}
 
       <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
         <div className="nav-in">
-          <a className="logo" onClick={() => go("home")}><img src="/the_gathering_logo.png" alt="The Gathering Church" /></a>
+          <a className="logo" onClick={() => go("home")}><img src={logo} alt="The Gathering Church" /></a>
           <ul className="nav-links">{NAV.map(l => <li key={l.id}><a onClick={() => go(l.id)}>{l.label}</a></li>)}</ul>
           <button className="nav-cta" onClick={() => window.open("https://thegatheringnwi.churchcenter.com/giving", "_blank")}>Give</button>
           <button className={`ham ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu"><span /><span /><span /></button>
@@ -628,7 +629,7 @@ html{scroll-behavior:smooth}body{margin:0}
 
       <footer className="foot">
         <div className="foot-in">
-          <div className="foot-brand"><div className="f-logo"><img src="/the_gathering_logo.png" alt="The Gathering Church" /></div><p>A church on mission to lead people into a growing relationship with Jesus Christ. Schererville, Indiana.</p></div>
+          <div className="foot-brand"><div className="f-logo"><img src={logo} alt="The Gathering Church" /></div><p>A church on mission to lead people into a growing relationship with Jesus Christ. Schererville, Indiana.</p></div>
           <div className="foot-col"><h5>Navigate</h5>{NAV.map(l => <a key={l.id} onClick={() => go(l.id)}>{l.label}</a>)}</div>
           <div className="foot-col"><h5>Connect</h5>
             <a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Facebook</a>
