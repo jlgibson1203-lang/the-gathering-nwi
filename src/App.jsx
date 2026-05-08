@@ -91,7 +91,23 @@ function Accordion({ title, text }) {
 }
 
 function PrayerModal({ open, onClose }) {
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
   if (!open) return null;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSending(true);
+    const form = e.target;
+    await fetch("https://formspree.io/f/mbdwanyj", {
+      method: "POST",
+      body: new FormData(form),
+      headers: { Accept: "application/json" },
+    });
+    setSending(false);
+    setSent(true);
+    form.reset();
+    setTimeout(() => { setSent(false); onClose(); }, 2500);
+  };
   return (
     <div className="overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
@@ -99,12 +115,17 @@ function PrayerModal({ open, onClose }) {
         <div style={{ fontSize: 36, marginBottom: 16 }}>🙏</div>
         <h3>Submit a Prayer Request</h3>
         <p className="modal-sub">What's on your heart? Our prayer team will lift you up.</p>
-        <input type="text" placeholder="Your name (optional)" />
-        <textarea rows={5} placeholder="Share your prayer request here..." />
-        <div style={{ display: "flex", gap: 10, alignItems: "center", margin: "8px 0 16px" }}>
-          <input type="checkbox" id="priv" style={{ width: "auto" }} /><label htmlFor="priv" style={{ fontSize: 13, color: "var(--muted)" }}>Keep this private to the prayer team</label>
-        </div>
-        <button className="btn btn-accent" style={{ width: "100%" }}>Send Prayer Request</button>
+        {sent ? <p style={{ color: "var(--sky)", fontWeight: 600, textAlign: "center", padding: "24px 0" }}>✓ Prayer request sent. We're praying for you.</p> : (
+          <form onSubmit={handleSubmit}>
+            <input type="hidden" name="_subject" value="🙏 Prayer Request" />
+            <input type="text" name="name" placeholder="Your name (optional)" />
+            <textarea rows={5} name="message" placeholder="Share your prayer request here..." required />
+            <div style={{ display: "flex", gap: 10, alignItems: "center", margin: "8px 0 16px" }}>
+              <input type="checkbox" id="priv" name="private" style={{ width: "auto" }} /><label htmlFor="priv" style={{ fontSize: 13, color: "var(--muted)" }}>Keep this private to the prayer team</label>
+            </div>
+            <button className="btn btn-accent" style={{ width: "100%" }} type="submit" disabled={sending}>{sending ? "Sending..." : "Send Prayer Request"}</button>
+          </form>
+        )}
       </div>
     </div>
   );
@@ -138,6 +159,21 @@ export default function TheGatheringNWI() {
     { label: "Groups", id: "groups" },
     { label: "Visit", id: "visit" }, { label: "Contact", id: "contact" },
   ];
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type=submit]');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    await fetch("https://formspree.io/f/mbdwanyj", {
+      method: "POST",
+      body: new FormData(e.target),
+      headers: { Accept: "application/json" },
+    });
+    btn.textContent = '✓ Sent!';
+    e.target.reset();
+    setTimeout(() => { btn.textContent = 'Submit'; btn.disabled = false; }, 3000);
+  };
 
   return (
     <div className="root">
@@ -575,11 +611,14 @@ html{scroll-behavior:smooth}body{margin:0}
             </div></Fade>
             <Fade delay={.15}><div className="ct-form">
               <h4>Let Us Know You're Coming</h4><p className="sub">We can't wait to see you!</p>
-              <div className="fr"><div className="ff"><label>First Name</label><input type="text" placeholder="First" /></div><div className="ff"><label>Last Name</label><input type="text" placeholder="Last" /></div></div>
-              <div className="fr"><div className="ff full"><label>Email</label><input type="email" placeholder="you@email.com" /></div></div>
-              <div className="fr"><div className="ff full"><label>Phone (optional)</label><input type="tel" placeholder="(555) 123-4567" /></div></div>
-              <div className="fr"><div className="ff full"><label>Questions / Comments</label><textarea rows={4} placeholder="Anything you'd like us to know?" /></div></div>
-              <button className="btn btn-dark" style={{ width: "100%", justifyContent: "center", marginTop: 8 }}>Submit</button>
+              <form onSubmit={handleContactSubmit}>
+                <input type="hidden" name="_subject" value="📋 Plan Your Visit" />
+                <div className="fr"><div className="ff"><label>First Name</label><input type="text" name="firstName" placeholder="First" required /></div><div className="ff"><label>Last Name</label><input type="text" name="lastName" placeholder="Last" required /></div></div>
+                <div className="fr"><div className="ff full"><label>Email</label><input type="email" name="email" placeholder="you@email.com" required /></div></div>
+                <div className="fr"><div className="ff full"><label>Phone (optional)</label><input type="tel" name="phone" placeholder="(555) 123-4567" /></div></div>
+                <div className="fr"><div className="ff full"><label>Questions / Comments</label><textarea rows={4} name="message" placeholder="Anything you'd like us to know?" /></div></div>
+                <button className="btn btn-dark" type="submit" style={{ width: "100%", justifyContent: "center", marginTop: 8 }}>Submit</button>
+              </form>
             </div></Fade>
           </div>
         </div>
