@@ -194,9 +194,10 @@ html{scroll-behavior:smooth}body{margin:0}
 .nav.scrolled{background:rgba(248,249,251,.97);backdrop-filter:blur(14px);box-shadow:0 1px 24px rgba(30,30,46,.06)}
 .nav-in{max-width:1260px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;transition:padding .3s}
 .nav.scrolled .nav-in{padding:12px 40px}
-.logo{font-family:var(--head);font-size:21px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.2px;transition:color .3s}
-.nav.scrolled .logo{color:var(--charcoal)}
-.logo em{font-style:italic;font-weight:400;color:var(--sky)}
+.logo{cursor:pointer;display:flex;align-items:center;transition:all .3s}
+.logo img{height:36px;width:auto;filter:brightness(0) invert(1);transition:filter .3s}
+.nav.scrolled .logo img{filter:none}
+.logo em{display:none}
 .nav-links{display:flex;gap:28px;list-style:none}
 .nav-links a{text-decoration:none;font-size:12px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.8);cursor:pointer;transition:color .3s;position:relative}
 .nav.scrolled .nav-links a{color:var(--text-lt)}
@@ -334,8 +335,9 @@ html{scroll-behavior:smooth}body{margin:0}
 .ff input:focus,.ff textarea:focus{border-color:var(--sky)}
 .foot{background:var(--charcoal-deep);color:#fff;padding:72px 36px 40px}
 .foot-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;gap:48px}
-.f-logo{font-family:var(--head);font-size:24px;font-weight:700;margin-bottom:12px}
-.f-logo em{font-style:italic;font-weight:400;color:var(--sky)}
+.f-logo{margin-bottom:12px}
+.f-logo img{height:32px;width:auto;filter:brightness(0) invert(1)}
+.f-logo em{display:none}
 .foot-brand p{font-size:14px;line-height:1.7;color:rgba(255,255,255,.35);font-weight:300}
 .foot-col h5{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:16px}
 .foot-col a{display:block;font-size:14px;color:rgba(255,255,255,.5);text-decoration:none;margin-bottom:10px;font-weight:300;transition:color .3s;cursor:pointer}
@@ -378,7 +380,7 @@ html{scroll-behavior:smooth}body{margin:0}
 
       <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
         <div className="nav-in">
-          <a className="logo" onClick={() => go("home")}>The Gathering <em>NWI</em></a>
+          <a className="logo" onClick={() => go("home")}><img src="/the_gathering_logo.png" alt="The Gathering Church" /></a>
           <ul className="nav-links">{NAV.map(l => <li key={l.id}><a onClick={() => go(l.id)}>{l.label}</a></li>)}</ul>
           <button className="nav-cta" onClick={() => window.open("https://thegatheringnwi.churchcenter.com/giving", "_blank")}>Give</button>
           <button className={`ham ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu"><span /><span /><span /></button>
@@ -626,7 +628,7 @@ html{scroll-behavior:smooth}body{margin:0}
 
       <footer className="foot">
         <div className="foot-in">
-          <div className="foot-brand"><div className="f-logo">The Gathering <em>NWI</em></div><p>A church on mission to lead people into a growing relationship with Jesus Christ. Schererville, Indiana.</p></div>
+          <div className="foot-brand"><div className="f-logo"><img src="/the_gathering_logo.png" alt="The Gathering Church" /></div><p>A church on mission to lead people into a growing relationship with Jesus Christ. Schererville, Indiana.</p></div>
           <div className="foot-col"><h5>Navigate</h5>{NAV.map(l => <a key={l.id} onClick={() => go(l.id)}>{l.label}</a>)}</div>
           <div className="foot-col"><h5>Connect</h5>
             <a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Facebook</a>
