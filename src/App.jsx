@@ -614,31 +614,18 @@ html{scroll-behavior:smooth}body{margin:0}
 
 
       <section className="sec" id="contact" style={{ background: "var(--sky-light)", maxWidth: "none", padding: "100px 36px" }}>
-        <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-          <Fade><div className="sec-h"><div className="sec-lab">Reach Out</div><h2 className="sec-title">We'd Love to<br />Hear from You</h2></div></Fade>
-          <div className="ct-grid">
-            <Fade><div className="ct-details">
-              {[
-                { icon: "📍", h: "Location", p: "360 E Lincoln Hwy, Schererville, IN 46375" },
-                { icon: "⏰", h: "Service Time", p: "Every Sunday at 10:30 AM" },
-                { icon: "📞", h: "Phone", p: <a href="tel:2197652124">(219) 765-2124</a> },
-                { icon: "✉️", h: "Email", p: <a href="mailto:gatheringchurchnwi@gmail.com">gatheringchurchnwi@gmail.com</a> },
-                { icon: "📺", h: "Watch Online", p: <a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Facebook Live every Sunday →</a> },
-                { icon: "📱", h: "Church Center", p: <a href="https://thegatheringnwi.churchcenter.com/" target="_blank" rel="noopener noreferrer">Download the app for groups, events & giving →</a> },
-              ].map(d => <div className="ct-d" key={d.h}><div className="ci">{d.icon}</div><div><h5>{d.h}</h5><p>{d.p}</p></div></div>)}
-            </div></Fade>
-            <Fade delay={.15}><div className="ct-form">
-              <h4>Let Us Know You're Coming</h4><p className="sub">We can't wait to see you!</p>
-              <form onSubmit={handleContactSubmit}>
-                <input type="hidden" name="_subject" value="📋 Plan Your Visit" />
-                <div className="fr"><div className="ff"><label>First Name</label><input type="text" name="firstName" placeholder="First" required /></div><div className="ff"><label>Last Name</label><input type="text" name="lastName" placeholder="Last" required /></div></div>
-                <div className="fr"><div className="ff full"><label>Email</label><input type="email" name="email" placeholder="you@email.com" required /></div></div>
-                <div className="fr"><div className="ff full"><label>Phone (optional)</label><input type="tel" name="phone" placeholder="(555) 123-4567" /></div></div>
-                <div className="fr"><div className="ff full"><label>Questions / Comments</label><textarea rows={4} name="message" placeholder="Anything you'd like us to know?" /></div></div>
-                <button className="btn btn-dark" type="submit" style={{ width: "100%", justifyContent: "center", marginTop: 8 }}>Submit</button>
-              </form>
-            </div></Fade>
-          </div>
+        <div style={{ maxWidth: 700, margin: "0 auto" }}>
+          <Fade><div className="sec-h c"><div className="sec-lab">Reach Out</div><h2 className="sec-title">We'd Love to Hear from You</h2></div></Fade>
+          <Fade><div className="ct-details" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
+            {[
+              { icon: "📍", h: "Location", p: "360 E Lincoln Hwy, Schererville, IN 46375" },
+              { icon: "⏰", h: "Service Time", p: "Every Sunday at 10:30 AM" },
+              { icon: "📞", h: "Phone", p: <a href="tel:2197652124">(219) 765-2124</a> },
+              { icon: "✉️", h: "Email", p: <a href="mailto:gatheringchurchnwi@gmail.com">gatheringchurchnwi@gmail.com</a> },
+              { icon: "📺", h: "Watch Online", p: <a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Facebook Live every Sunday →</a> },
+              { icon: "📱", h: "Church Center", p: <a href="https://thegatheringnwi.churchcenter.com/" target="_blank" rel="noopener noreferrer">Download the app for groups, events & giving →</a> },
+            ].map(d => <div className="ct-d" key={d.h}><div className="ci">{d.icon}</div><div><h5>{d.h}</h5><p>{d.p}</p></div></div>)}
+          </div></Fade>
         </div>
       </section>
 
