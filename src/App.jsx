@@ -564,7 +564,7 @@ html{scroll-behavior:smooth}body{margin:0}
           </div></Fade>
           <div className="pastor-grid">
             <Fade><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
-              <div style={{ height: 220, background: "linear-gradient(145deg,var(--charcoal-deep),#33334a)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div style={{ height: 260, background: "linear-gradient(145deg,var(--charcoal-deep),#33334a)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <div style={{ textAlign: "center", color: "rgba(255,255,255,.3)" }}>
                   <div style={{ fontSize: 56 }}>👨‍👩‍</div>
                   <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginTop: 8 }}>Photo Coming Soon</div>
@@ -577,8 +577,8 @@ html{scroll-behavior:smooth}body{margin:0}
               </div>
             </div></Fade>
             <Fade delay={.1}><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
-              <div style={{ height: 280, overflow: "hidden" }}>
-                <img src={gibsonPhoto} alt="Jordan & Kaitlin Gibson Family" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} />
+              <div>
+                <img src={gibsonPhoto} alt="Jordan & Kaitlin Gibson Family" style={{ width: "100%", display: "block" }} />
               </div>
               <div style={{ padding: "32px" }}>
                 <div className="sec-lab">Pastor &amp; Family</div>
