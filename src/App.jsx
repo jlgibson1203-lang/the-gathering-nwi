@@ -456,7 +456,7 @@ html{scroll-behavior:smooth}body{margin:0}
           {sermon ? (
             <>
               <div className="sermon-thumb" onClick={() => window.open(`https://youtube.com/watch?v=${sermon.videoId}`, "_blank")}>
-                {sermon.thumb && <img src={sermon.thumb} alt={sermon.title} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: .7 }} />}
+                {sermon.thumb && <img src={sermon.thumb} alt={sermon.title} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", background: "var(--charcoal-deep)" }} />}
                 <div className="sermon-badge">Latest Sermon</div>
                 <div className="play"><svg width="28" height="28" viewBox="0 0 24 24"><polygon points="8,5 20,12 8,19" /></svg></div>
               </div>
