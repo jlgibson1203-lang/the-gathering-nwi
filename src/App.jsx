@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import logo from "./the_gathering_logo.png";
+import gibsonPhoto from "./gibson_family.jpg";
 
 /* ───────── YOUTUBE CONFIG ───────── */
 const YT_API_KEY = "AIzaSyDeCJS_Ysga2z9c1CucEaukxCCzxxSGOeo";
@@ -355,12 +356,14 @@ html{scroll-behavior:smooth}body{margin:0}
 .modal input:focus,.modal textarea:focus{border-color:var(--sky)}
 .fab{position:fixed;bottom:24px;right:24px;z-index:50;background:var(--sky);color:#fff;border:none;width:56px;height:56px;border-radius:50%;font-size:24px;cursor:pointer;box-shadow:0 4px 24px rgba(59,159,217,.35);transition:all .3s;display:flex;align-items:center;justify-content:center}
 .fab:hover{transform:scale(1.1);box-shadow:0 6px 32px rgba(59,159,217,.5)}
+.pastor-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 @media(max-width:1000px){
   .nav-links,.nav-cta{display:none}.ham{display:block}
   .sermon{grid-template-columns:1fr}.about-grid,.ct-grid{grid-template-columns:1fr}
   .grp-grid{grid-template-columns:1fr}.exp-grid{grid-template-columns:1fr 1fr}
   .qbar-in{grid-template-columns:1fr 1fr}.foot-in{grid-template-columns:1fr 1fr}
   .pray-banner{flex-direction:column;text-align:center}.pray-banner p{margin:8px auto 0}
+  .pastor-grid{grid-template-columns:1fr}
 }
 @media(max-width:600px){
   .sec{padding:72px 20px}.hero-content{padding:120px 20px 80px}
@@ -559,7 +562,7 @@ html{scroll-behavior:smooth}body{margin:0}
             <div className="sec-lab">Our Pastors</div>
             <h2 className="sec-title">Meet the Team</h2>
           </div></Fade>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+          <div className="pastor-grid">
             <Fade><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
               <div style={{ height: 220, background: "linear-gradient(145deg,var(--charcoal-deep),#33334a)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <div style={{ textAlign: "center", color: "rgba(255,255,255,.3)" }}>
@@ -574,11 +577,8 @@ html{scroll-behavior:smooth}body{margin:0}
               </div>
             </div></Fade>
             <Fade delay={.1}><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
-              <div style={{ height: 220, background: "linear-gradient(145deg,#2a2a3a,var(--charcoal-mid))", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ textAlign: "center", color: "rgba(255,255,255,.3)" }}>
-                  <div style={{ fontSize: 56 }}>👨‍👩‍👧‍👦</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginTop: 8 }}>Photo Coming Soon</div>
-                </div>
+              <div style={{ height: 280, overflow: "hidden" }}>
+                <img src={gibsonPhoto} alt="Jordan & Kaitlin Gibson Family" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top" }} />
               </div>
               <div style={{ padding: "32px" }}>
                 <div className="sec-lab">Pastor &amp; Family</div>
