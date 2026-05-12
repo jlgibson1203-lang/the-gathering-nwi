@@ -1,6 +1,4 @@
-import { useState, useEffect, useRef } from "react";
-import logo from "./the_gathering_logo.png";
-import gibsonPhoto from "./gibson_family.jpg";
+{ icon: "📱", title: "Church Center App", desc: "Download the Church Center app and searchimport { useState, useEffect, useRef } from "react";
 
 /* ───────── YOUTUBE CONFIG ───────── */
 const YT_API_KEY = "AIzaSyDeCJS_Ysga2z9c1CucEaukxCCzxxSGOeo";
@@ -62,7 +60,7 @@ const EXPECT = [
   { icon: "🎵", title: "Worship & Teaching", desc: "Contemporary worship followed by Bible-centered, practical teaching." },
   { icon: "👶", title: "Kids Are Covered", desc: "Children are an important part of the family here at The Gathering! We offer Nursery (ages 0–3) for the full service and Kids' Praise (ages 4–9) after worship. Youth Group (10+) meets every other Sunday morning." },
   { icon: "☕", title: "Stay & Connect", desc: "Hang around after! We'd love to meet you and answer any questions." },
-  { icon: "📱", title: "Church Center App", desc: "Download the Church Center app and search The Gathering NWI for events, groups, giving, and staying connected all week." },
+  { icon: "📱", title: "Church Center App", desc: "Download the Church Center app and search The Gathering NWI for events, groups, giving, and staying connected all week.", url: "https://thegatheringnwi.churchcenter.com/" },
 ];
 
 /* ───────── HOOKS ───────── */
@@ -93,23 +91,7 @@ function Accordion({ title, text }) {
 }
 
 function PrayerModal({ open, onClose }) {
-  const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
   if (!open) return null;
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSending(true);
-    const form = e.target;
-    await fetch("https://formspree.io/f/mbdwanyj", {
-      method: "POST",
-      body: new FormData(form),
-      headers: { Accept: "application/json" },
-    });
-    setSending(false);
-    setSent(true);
-    form.reset();
-    setTimeout(() => { setSent(false); onClose(); }, 2500);
-  };
   return (
     <div className="overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
@@ -117,17 +99,12 @@ function PrayerModal({ open, onClose }) {
         <div style={{ fontSize: 36, marginBottom: 16 }}>🙏</div>
         <h3>Submit a Prayer Request</h3>
         <p className="modal-sub">What's on your heart? Our prayer team will lift you up.</p>
-        {sent ? <p style={{ color: "var(--sky)", fontWeight: 600, textAlign: "center", padding: "24px 0" }}>✓ Prayer request sent. We're praying for you.</p> : (
-          <form onSubmit={handleSubmit}>
-            <input type="hidden" name="_subject" value="🙏 Prayer Request" />
-            <input type="text" name="name" placeholder="Your name (optional)" />
-            <textarea rows={5} name="message" placeholder="Share your prayer request here..." required />
-            <div style={{ display: "flex", gap: 10, alignItems: "center", margin: "8px 0 16px" }}>
-              <input type="checkbox" id="priv" name="private" style={{ width: "auto" }} /><label htmlFor="priv" style={{ fontSize: 13, color: "var(--muted)" }}>Keep this private to the prayer team</label>
-            </div>
-            <button className="btn btn-accent" style={{ width: "100%" }} type="submit" disabled={sending}>{sending ? "Sending..." : "Send Prayer Request"}</button>
-          </form>
-        )}
+        <input type="text" placeholder="Your name (optional)" />
+        <textarea rows={5} placeholder="Share your prayer request here..." />
+        <div style={{ display: "flex", gap: 10, alignItems: "center", margin: "8px 0 16px" }}>
+          <input type="checkbox" id="priv" style={{ width: "auto" }} /><label htmlFor="priv" style={{ fontSize: 13, color: "var(--muted)" }}>Keep this private to the prayer team</label>
+        </div>
+        <button className="btn btn-accent" style={{ width: "100%" }}>Send Prayer Request</button>
       </div>
     </div>
   );
@@ -162,21 +139,6 @@ export default function TheGatheringNWI() {
     { label: "Visit", id: "visit" }, { label: "Contact", id: "contact" },
   ];
 
-  const handleContactSubmit = async (e) => {
-    e.preventDefault();
-    const btn = e.target.querySelector('button[type=submit]');
-    btn.textContent = 'Sending...';
-    btn.disabled = true;
-    await fetch("https://formspree.io/f/mbdwanyj", {
-      method: "POST",
-      body: new FormData(e.target),
-      headers: { Accept: "application/json" },
-    });
-    btn.textContent = '✓ Sent!';
-    e.target.reset();
-    setTimeout(() => { btn.textContent = 'Submit'; btn.disabled = false; }, 3000);
-  };
-
   return (
     <div className="root">
       <style>{`
@@ -196,10 +158,9 @@ html{scroll-behavior:smooth}body{margin:0}
 .nav.scrolled{background:rgba(248,249,251,.97);backdrop-filter:blur(14px);box-shadow:0 1px 24px rgba(30,30,46,.06)}
 .nav-in{max-width:1260px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;transition:padding .3s}
 .nav.scrolled .nav-in{padding:12px 40px}
-.logo{cursor:pointer;display:flex;align-items:center;transition:all .3s}
-.logo img{height:36px;width:auto;filter:brightness(0) invert(1);transition:filter .3s}
-.nav.scrolled .logo img{filter:none}
-.logo em{display:none}
+.logo{font-family:var(--head);font-size:21px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.2px;transition:color .3s}
+.nav.scrolled .logo{color:var(--charcoal)}
+.logo em{font-style:italic;font-weight:400;color:var(--sky)}
 .nav-links{display:flex;gap:28px;list-style:none}
 .nav-links a{text-decoration:none;font-size:12px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.8);cursor:pointer;transition:color .3s;position:relative}
 .nav.scrolled .nav-links a{color:var(--text-lt)}
@@ -337,9 +298,8 @@ html{scroll-behavior:smooth}body{margin:0}
 .ff input:focus,.ff textarea:focus{border-color:var(--sky)}
 .foot{background:var(--charcoal-deep);color:#fff;padding:72px 36px 40px}
 .foot-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;gap:48px}
-.f-logo{margin-bottom:12px}
-.f-logo img{height:32px;width:auto;filter:brightness(0) invert(1)}
-.f-logo em{display:none}
+.f-logo{font-family:var(--head);font-size:24px;font-weight:700;margin-bottom:12px}
+.f-logo em{font-style:italic;font-weight:400;color:var(--sky)}
 .foot-brand p{font-size:14px;line-height:1.7;color:rgba(255,255,255,.35);font-weight:300}
 .foot-col h5{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:16px}
 .foot-col a{display:block;font-size:14px;color:rgba(255,255,255,.5);text-decoration:none;margin-bottom:10px;font-weight:300;transition:color .3s;cursor:pointer}
@@ -356,14 +316,12 @@ html{scroll-behavior:smooth}body{margin:0}
 .modal input:focus,.modal textarea:focus{border-color:var(--sky)}
 .fab{position:fixed;bottom:24px;right:24px;z-index:50;background:var(--sky);color:#fff;border:none;width:56px;height:56px;border-radius:50%;font-size:24px;cursor:pointer;box-shadow:0 4px 24px rgba(59,159,217,.35);transition:all .3s;display:flex;align-items:center;justify-content:center}
 .fab:hover{transform:scale(1.1);box-shadow:0 6px 32px rgba(59,159,217,.5)}
-.pastor-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 @media(max-width:1000px){
   .nav-links,.nav-cta{display:none}.ham{display:block}
   .sermon{grid-template-columns:1fr}.about-grid,.ct-grid{grid-template-columns:1fr}
   .grp-grid{grid-template-columns:1fr}.exp-grid{grid-template-columns:1fr 1fr}
   .qbar-in{grid-template-columns:1fr 1fr}.foot-in{grid-template-columns:1fr 1fr}
   .pray-banner{flex-direction:column;text-align:center}.pray-banner p{margin:8px auto 0}
-  .pastor-grid{grid-template-columns:1fr}
 }
 @media(max-width:600px){
   .sec{padding:72px 20px}.hero-content{padding:120px 20px 80px}
@@ -384,7 +342,7 @@ html{scroll-behavior:smooth}body{margin:0}
 
       <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
         <div className="nav-in">
-          <a className="logo" onClick={() => go("home")}><img src={logo} alt="The Gathering Church" /></a>
+          <a className="logo" onClick={() => go("home")}>The Gathering <em>NWI</em></a>
           <ul className="nav-links">{NAV.map(l => <li key={l.id}><a onClick={() => go(l.id)}>{l.label}</a></li>)}</ul>
           <button className="nav-cta" onClick={() => window.open("https://thegatheringnwi.churchcenter.com/giving", "_blank")}>Give</button>
           <button className={`ham ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu"><span /><span /><span /></button>
@@ -456,7 +414,7 @@ html{scroll-behavior:smooth}body{margin:0}
           {sermon ? (
             <>
               <div className="sermon-thumb" onClick={() => window.open(`https://youtube.com/watch?v=${sermon.videoId}`, "_blank")}>
-                {sermon.thumb && <img src={sermon.thumb} alt={sermon.title} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain", background: "var(--charcoal-deep)" }} />}
+                {sermon.thumb && <img src={sermon.thumb} alt={sermon.title} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: .7 }} />}
                 <div className="sermon-badge">Latest Sermon</div>
                 <div className="play"><svg width="28" height="28" viewBox="0 0 24 24"><polygon points="8,5 20,12 8,19" /></svg></div>
               </div>
@@ -495,6 +453,60 @@ html{scroll-behavior:smooth}body{margin:0}
         </div></Fade>
       </section>
 
+      {/* ABOUT */}
+      <section className="sec" id="about" style={{ background: "var(--sky-light)", maxWidth: "none", padding: "100px 36px" }}>
+        <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+          <Fade><div className="sec-h c">
+            <div className="sec-lab">Our Story</div>
+            <h2 className="sec-title">Welcome to The Gathering</h2>
+            <p className="sec-desc">We are excited for your first visit and a chance to meet you! Visiting somewhere new can be intimidating. We hope you find we are a community of people that are welcoming, loving, and ready to serve you and your family. No matter where you've been or what you've been through, there's a place for you here.</p>
+          </div></Fade>
+
+          {/* Community blurb */}
+          <Fade delay={.1}><div style={{ background: "var(--charcoal)", borderRadius: "var(--radius-lg)", padding: "48px", marginBottom: 64, textAlign: "center" }}>
+            <h3 style={{ fontFamily: "var(--head)", fontSize: 26, fontWeight: 600, color: "#fff", marginBottom: 16 }}>A Little About Us</h3>
+            <p style={{ fontSize: 15, lineHeight: 1.85, color: "rgba(255,255,255,.5)", fontWeight: 300, maxWidth: 680, margin: "0 auto 24px" }}>Don't miss the opportunity to be part of our vibrant community every Sunday at 10:30 AM CST for our live services. Experience the warmth and inspiration of our gatherings from wherever you are! And if you can't make it to our live broadcast, don't worry — we have a rich archive of past sessions available for you to explore at your convenience. Join us in celebrating faith, hope, and community!</p>
+            <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
+              <a className="btn btn-accent" href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Watch Live</a>
+              <a className="btn btn-ghost" href={`https://youtube.com/@${YT_HANDLE}`} target="_blank" rel="noopener noreferrer">Sermon Archive →</a>
+            </div>
+          </div></Fade>
+
+          {/* Pastor cards */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+            {/* The Evers */}
+            <Fade><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
+              <div style={{ height: 220, background: "linear-gradient(145deg,var(--charcoal-deep),#33334a)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ textAlign: "center", color: "rgba(255,255,255,.3)" }}>
+                  <div style={{ fontSize: 56 }}>👨‍👩‍</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginTop: 8 }}>Photo Coming Soon</div>
+                </div>
+              </div>
+              <div style={{ padding: "32px" }}>
+                <div className="sec-lab">Founding Pastors</div>
+                <h3 style={{ fontFamily: "var(--head)", fontSize: 28, fontWeight: 600, color: "var(--charcoal)", margin: "8px 0 16px" }}>Shawn &amp; Kelly Evers</h3>
+                <p style={{ fontSize: 14, lineHeight: 1.85, color: "var(--text-lt)", fontWeight: 300 }}>In a world where everyone is "virtually connected," in-person connections seem to be harder than ever. Through their passion for people and Jesus, Shawn and Kelly Evers started The Gathering. The hope is to create a community focused around relationships with each other and with Jesus — a community where everyone is welcome wherever they are in life; imperfect people trying to follow what Jesus said.</p>
+              </div>
+            </div></Fade>
+
+            {/* The Gibsons */}
+            <Fade delay={.1}><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
+              <div style={{ height: 220, background: "linear-gradient(145deg,#2a2a3a,var(--charcoal-mid))", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ textAlign: "center", color: "rgba(255,255,255,.3)" }}>
+                  <div style={{ fontSize: 56 }}>👨‍👩‍👧‍👦</div>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginTop: 8 }}>Photo Coming Soon</div>
+                </div>
+              </div>
+              <div style={{ padding: "32px" }}>
+                <div className="sec-lab">Pastor &amp; Family</div>
+                <h3 style={{ fontFamily: "var(--head)", fontSize: 28, fontWeight: 600, color: "var(--charcoal)", margin: "8px 0 16px" }}>Jordan &amp; Kaitlin Gibson</h3>
+                <p style={{ fontSize: 14, lineHeight: 1.85, color: "var(--text-lt)", fontWeight: 300 }}>The Gibsons are excited to help lead at The Gathering! Jordan completed his MDiv in 2018 through Fuller Theological Seminary and has been serving as one of the pastors of The Gathering for almost 9 years. He is passionate about helping those far from God connect to God and the community. Jordan and his wife Kaitlin are proud parents to their children, Birch and Marigold.</p>
+              </div>
+            </div></Fade>
+          </div>
+        </div>
+      </section>
+
       {/* WHAT TO EXPECT */}
       <section className="sec" id="visit">
         <Fade><div className="sec-h c">
@@ -503,26 +515,35 @@ html{scroll-behavior:smooth}body{margin:0}
           <p className="sec-desc">We know visiting a new church can feel nerve-wracking. Here's everything you need to know so you can walk in with confidence.</p>
         </div></Fade>
         <div className="exp-grid">
-          {EXPECT.map((e, i) => <Fade key={e.title} delay={i * .05}><div className="exp-card"><span className="ei">{e.icon}</span><h4>{e.title}</h4><p>{e.desc}</p></div></Fade>)}
+          {EXPECT.map((e, i) => <Fade key={e.title} delay={i * .05}><div className="exp-card" style={{ cursor: e.url ? "pointer" : "default" }} onClick={() => e.url && window.open(e.url, "_blank")}><span className="ei">{e.icon}</span><h4>{e.title}</h4><p>{e.desc}</p></div></Fade>)}
         </div>
       </section>
 
-      {/* LET US KNOW YOU'RE COMING */}
+      {/* PLAN YOUR VISIT FORM */}
       <section className="sec" style={{ paddingTop: 0 }}>
-        <Fade><div className="ct-form" style={{ maxWidth: 560, margin: "0 auto" }}>
-          <h4 style={{ textAlign: "center" }}>Let Us Know You're Coming</h4><p className="sub" style={{ textAlign: "center" }}>We can't wait to see you!</p>
-          <form onSubmit={handleContactSubmit}>
-            <input type="hidden" name="_subject" value="📋 Plan Your Visit" />
-            <div className="fr"><div className="ff"><label>First Name</label><input type="text" name="firstName" placeholder="First" required /></div><div className="ff"><label>Last Name</label><input type="text" name="lastName" placeholder="Last" required /></div></div>
-            <div className="fr"><div className="ff full"><label>Email</label><input type="email" name="email" placeholder="you@email.com" required /></div></div>
-            <div className="fr"><div className="ff full"><label>Phone (optional)</label><input type="tel" name="phone" placeholder="(555) 123-4567" /></div></div>
-            <div className="fr"><div className="ff full"><label>Questions / Comments</label><textarea rows={4} name="message" placeholder="Anything you'd like us to know?" /></div></div>
-            <button className="btn btn-dark" type="submit" style={{ width: "100%", justifyContent: "center", marginTop: 8 }}>Submit</button>
-          </form>
+        <Fade><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", padding: 40, maxWidth: 600, margin: "0 auto" }}>
+          <h4 style={{ fontFamily: "var(--head)", fontSize: 28, fontWeight: 600, color: "var(--charcoal)", marginBottom: 6 }}>Let Us Know You're Coming</h4>
+          <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 24 }}>We can't wait to see you!</p>
+          <div className="fr"><div className="ff"><label>First Name</label><input type="text" placeholder="First" /></div><div className="ff"><label>Last Name</label><input type="text" placeholder="Last" /></div></div>
+          <div className="fr"><div className="ff full"><label>Email</label><input type="email" placeholder="you@email.com" /></div></div>
+          <div className="fr"><div className="ff full"><label>Phone (optional)</label><input type="tel" placeholder="(555) 123-4567" /></div></div>
+          <div className="fr"><div className="ff full"><label>Questions / Comments</label><textarea rows={4} placeholder="Anything you'd like us to know?" /></div></div>
+          <button className="btn btn-dark" style={{ width: "100%", justifyContent: "center", marginTop: 8 }}>Submit</button>
         </div></Fade>
       </section>
 
-      {/* FIND YOUR COMMUNITY */}
+      {/* BELIEFS */}
+      <div className="beliefs-bg" id="beliefs">
+        <section className="sec" style={{ padding: "0 36px" }}>
+          <Fade><div className="sec-h c">
+            <div className="sec-lab" style={{ color: "var(--sky)" }}>What We Believe</div>
+            <h2 className="sec-title" style={{ color: "#fff" }}>Rooted in Scripture,<br />Centered on Christ</h2>
+            <p className="sec-desc" style={{ color: "rgba(255,255,255,.45)" }}>Our beliefs are centered on faith in Jesus Christ, the authority of the Bible, and living out God's love in community.</p>
+          </div></Fade>
+          <Fade delay={.1}><div>{BELIEFS.map(b => <Accordion key={b.title} title={b.title} text={b.text} />)}</div></Fade>
+        </section>
+      </div>
+
       <section className="sec" id="groups">
         <Fade><div className="sec-h c">
           <div className="sec-lab">Get Connected</div>
@@ -540,68 +561,6 @@ html{scroll-behavior:smooth}body{margin:0}
         </div>
       </section>
 
-      {/* ABOUT US (combined: story + blurb + pastors) */}
-      <section className="sec" id="about" style={{ background: "var(--sky-light)", maxWidth: "none", padding: "100px 36px" }}>
-        <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-          <Fade><div className="sec-h c">
-            <div className="sec-lab">Our Story</div>
-            <h2 className="sec-title">Welcome to The Gathering</h2>
-            <p className="sec-desc">We are excited for your first visit and a chance to meet you! Visiting somewhere new can be intimidating. We hope you find we are a community of people that are welcoming, loving, and ready to serve you and your family. No matter where you've been or what you've been through, there's a place for you here.</p>
-          </div></Fade>
-
-          <Fade delay={.1}><div style={{ background: "var(--charcoal)", borderRadius: "var(--radius-lg)", padding: "48px", marginBottom: 64, textAlign: "center" }}>
-            <h3 style={{ fontFamily: "var(--head)", fontSize: 26, fontWeight: 600, color: "#fff", marginBottom: 16 }}>A Little About Us</h3>
-            <p style={{ fontSize: 15, lineHeight: 1.85, color: "rgba(255,255,255,.5)", fontWeight: 300, maxWidth: 680, margin: "0 auto 24px" }}>We're a community of imperfect people learning to follow Jesus together, and we believe real growth happens through real relationships. Whether you've been walking with God for decades or you're just starting to ask questions, you belong here. We gather every Sunday in Schererville to worship, learn, and do life together — and we'd love for you to be part of it.</p>
-            <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-              <a className="btn btn-accent" href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Watch Live</a>
-              <a className="btn btn-ghost" href={`https://youtube.com/@${YT_HANDLE}`} target="_blank" rel="noopener noreferrer">Sermon Archive →</a>
-            </div>
-          </div></Fade>
-
-          <Fade><div className="sec-h c" style={{ marginBottom: 32 }}>
-            <div className="sec-lab">Our Pastors</div>
-            <h2 className="sec-title">Meet the Team</h2>
-          </div></Fade>
-          <div className="pastor-grid">
-            <Fade><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
-              <div style={{ height: 260, background: "linear-gradient(145deg,var(--charcoal-deep),#33334a)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ textAlign: "center", color: "rgba(255,255,255,.3)" }}>
-                  <div style={{ fontSize: 56 }}>👨‍👩‍</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginTop: 8 }}>Photo Coming Soon</div>
-                </div>
-              </div>
-              <div style={{ padding: "32px" }}>
-                <div className="sec-lab">Founding Pastors</div>
-                <h3 style={{ fontFamily: "var(--head)", fontSize: 28, fontWeight: 600, color: "var(--charcoal)", margin: "8px 0 16px" }}>Shawn &amp; Kelly Evers</h3>
-                <p style={{ fontSize: 14, lineHeight: 1.85, color: "var(--text-lt)", fontWeight: 300 }}>In a world where everyone is "virtually connected," in-person connections seem to be harder than ever. Through their passion for people and Jesus, Shawn and Kelly Evers started The Gathering. The hope is to create a community focused around relationships with each other and with Jesus — a community where everyone is welcome wherever they are in life; imperfect people trying to follow what Jesus said.</p>
-              </div>
-            </div></Fade>
-            <Fade delay={.1}><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
-              <div>
-                <img src={gibsonPhoto} alt="Jordan & Kaitlin Gibson Family" style={{ width: "100%", display: "block" }} />
-              </div>
-              <div style={{ padding: "32px" }}>
-                <div className="sec-lab">Pastor &amp; Family</div>
-                <h3 style={{ fontFamily: "var(--head)", fontSize: 28, fontWeight: 600, color: "var(--charcoal)", margin: "8px 0 16px" }}>Jordan &amp; Kaitlin Gibson</h3>
-                <p style={{ fontSize: 14, lineHeight: 1.85, color: "var(--text-lt)", fontWeight: 300 }}>The Gibsons are excited to help lead at The Gathering! Jordan completed his MDiv in 2018 through Fuller Theological Seminary and has been serving as one of the pastors of The Gathering for almost 9 years. He is passionate about helping those far from God connect to God and the community. Jordan and his wife Kaitlin are proud parents to their children, Birch and Marigold.</p>
-              </div>
-            </div></Fade>
-          </div>
-        </div>
-      </section>
-
-      {/* BELIEFS */}
-      <div className="beliefs-bg" id="beliefs">
-        <section className="sec" style={{ padding: "0 36px" }}>
-          <Fade><div className="sec-h c">
-            <div className="sec-lab" style={{ color: "var(--sky)" }}>What We Believe</div>
-            <h2 className="sec-title" style={{ color: "#fff" }}>Rooted in Scripture,<br />Centered on Christ</h2>
-            <p className="sec-desc" style={{ color: "rgba(255,255,255,.45)" }}>Our beliefs are centered on faith in Jesus Christ, the authority of the Bible, and living out God's love in community.</p>
-          </div></Fade>
-          <Fade delay={.1}><div>{BELIEFS.map(b => <Accordion key={b.title} title={b.title} text={b.text} />)}</div></Fade>
-        </section>
-      </div>
-
 
 
       <section className="sec">
@@ -613,28 +572,62 @@ html{scroll-behavior:smooth}body{margin:0}
 
 
 
+      {/* SOCIAL BAR */}
+      <section className="sec" style={{ paddingTop: 0, paddingBottom: 60 }}>
+        <Fade><div style={{ background: "linear-gradient(135deg,var(--sky),#2d8cc6)", borderRadius: "var(--radius-lg)", padding: "48px 40px", textAlign: "center", color: "#fff" }}>
+          <h3 style={{ fontFamily: "var(--head)", fontSize: 28, fontWeight: 600, marginBottom: 10 }}>Stay Connected</h3>
+          <p style={{ fontSize: 15, opacity: .9, fontWeight: 300, marginBottom: 28, maxWidth: 480, margin: "0 auto 28px" }}>Follow us on social to stay up to date with everything happening at The Gathering!</p>
+          <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
+            <a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", color: "var(--charcoal)", padding: "14px 28px", borderRadius: 100, textDecoration: "none", fontSize: 14, fontWeight: 700, letterSpacing: ".5px" }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877f2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              Facebook
+            </a>
+            <a href="https://www.instagram.com/thegatheringnwi" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", color: "var(--charcoal)", padding: "14px 28px", borderRadius: 100, textDecoration: "none", fontSize: 14, fontWeight: 700, letterSpacing: ".5px" }}>
+              <svg width="18" height="18" viewBox="0 0 24 24"><defs><linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stopColor="#fdf497"/><stop offset="5%" stopColor="#fdf497"/><stop offset="45%" stopColor="#fd5949"/><stop offset="60%" stopColor="#d6249f"/><stop offset="90%" stopColor="#285AEB"/></linearGradient></defs><path fill="url(#ig)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+              Instagram
+            </a>
+            <a href={`https://youtube.com/@${YT_HANDLE}`} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", color: "var(--charcoal)", padding: "14px 28px", borderRadius: 100, textDecoration: "none", fontSize: 14, fontWeight: 700, letterSpacing: ".5px" }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              YouTube
+            </a>
+          </div>
+        </div></Fade>
+      </section>
+
       <section className="sec" id="contact" style={{ background: "var(--sky-light)", maxWidth: "none", padding: "100px 36px" }}>
-        <div style={{ maxWidth: 700, margin: "0 auto" }}>
-          <Fade><div className="sec-h c"><div className="sec-lab">Reach Out</div><h2 className="sec-title">We'd Love to Hear from You</h2></div></Fade>
-          <Fade><div className="ct-details" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
-            {[
-              { icon: "📍", h: "Location", p: "360 E Lincoln Hwy, Schererville, IN 46375" },
-              { icon: "⏰", h: "Service Time", p: "Every Sunday at 10:30 AM" },
-              { icon: "📞", h: "Phone", p: <a href="tel:2197652124">(219) 765-2124</a> },
-              { icon: "✉️", h: "Email", p: <a href="mailto:gatheringchurchnwi@gmail.com">gatheringchurchnwi@gmail.com</a> },
-              { icon: "📺", h: "Watch Online", p: <a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Facebook Live every Sunday →</a> },
-              { icon: "📱", h: "Church Center", p: <a href="https://thegatheringnwi.churchcenter.com/" target="_blank" rel="noopener noreferrer">Download the app for groups, events & giving →</a> },
-            ].map(d => <div className="ct-d" key={d.h}><div className="ci">{d.icon}</div><div><h5>{d.h}</h5><p>{d.p}</p></div></div>)}
-          </div></Fade>
+        <div style={{ maxWidth: 1120, margin: "0 auto" }}>
+          <Fade><div className="sec-h"><div className="sec-lab">Reach Out</div><h2 className="sec-title">We'd Love to<br />Hear from You</h2></div></Fade>
+          <div className="ct-grid">
+            <Fade><div className="ct-details">
+              {[
+                { icon: "📍", h: "Location", p: "360 E Lincoln Hwy, Schererville, IN 46375" },
+                { icon: "⏰", h: "Service Time", p: "Every Sunday at 10:30 AM" },
+                { icon: "📞", h: "Phone", p: <a href="tel:2197652124">(219) 765-2124</a> },
+                { icon: "✉️", h: "Email", p: <a href="mailto:gatheringchurchnwi@gmail.com">gatheringchurchnwi@gmail.com</a> },
+                { icon: "📺", h: "Watch Online", p: <a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Facebook Live every Sunday →</a> },
+                { icon: "📱", h: "Church Center", p: <a href="https://thegatheringnwi.churchcenter.com/" target="_blank" rel="noopener noreferrer">Download the app for groups, events & giving →</a> },
+              ].map(d => <div className="ct-d" key={d.h}><div className="ci">{d.icon}</div><div><h5>{d.h}</h5><p>{d.p}</p></div></div>)}
+            </div></Fade>
+            <Fade delay={.15}><div className="ct-form">
+              <h4>Send Us a Message</h4><p className="sub">We'd love to hear from you!</p>
+              <div className="fr"><div className="ff"><label>First Name</label><input type="text" placeholder="First" /></div><div className="ff"><label>Last Name</label><input type="text" placeholder="Last" /></div></div>
+              <div className="fr"><div className="ff full"><label>Email</label><input type="email" placeholder="you@email.com" /></div></div>
+              <div className="fr"><div className="ff full"><label>Phone (optional)</label><input type="tel" placeholder="(555) 123-4567" /></div></div>
+              <div className="fr"><div className="ff full"><label>Questions / Comments</label><textarea rows={4} placeholder="Anything you'd like us to know?" /></div></div>
+              <button className="btn btn-dark" style={{ width: "100%", justifyContent: "center", marginTop: 8 }}>Submit</button>
+            </div></Fade>
+          </div>
         </div>
       </section>
 
       <footer className="foot">
         <div className="foot-in">
-          <div className="foot-brand"><div className="f-logo"><img src={logo} alt="The Gathering Church" /></div><p>A church on mission to lead people into a growing relationship with Jesus Christ. Schererville, Indiana.</p></div>
+          <div className="foot-brand"><div className="f-logo">The Gathering <em>NWI</em></div><p>A church on mission to lead people into a growing relationship with Jesus Christ. Schererville, Indiana.</p></div>
           <div className="foot-col"><h5>Navigate</h5>{NAV.map(l => <a key={l.id} onClick={() => go(l.id)}>{l.label}</a>)}</div>
           <div className="foot-col"><h5>Connect</h5>
             <a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Facebook</a>
+            <a href="https://www.instagram.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href={`https://youtube.com/@${YT_HANDLE}`} target="_blank" rel="noopener noreferrer">YouTube</a>
             <a href="https://thegatheringnwi.churchcenter.com/" target="_blank" rel="noopener noreferrer">Church Center</a>
             <a onClick={() => setPrayerOpen(true)}>Prayer Request</a>
             <a href="https://thegatheringnwi.churchcenter.com/giving" target="_blank" rel="noopener noreferrer">Give Online</a>
