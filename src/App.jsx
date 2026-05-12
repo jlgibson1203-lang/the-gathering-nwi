@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import logo from "./the_gathering_logo.png";
+import gibsonPhoto from "./gibson_family.jpg";
 
 /* ───────── YOUTUBE CONFIG ───────── */
 const YT_API_KEY = "AIzaSyDeCJS_Ysga2z9c1CucEaukxCCzxxSGOeo";
@@ -136,9 +138,10 @@ html{scroll-behavior:smooth}body{margin:0}
 .nav.scrolled{background:rgba(248,249,251,.97);backdrop-filter:blur(14px);box-shadow:0 1px 24px rgba(30,30,46,.06)}
 .nav-in{max-width:1260px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;transition:padding .3s}
 .nav.scrolled .nav-in{padding:12px 40px}
-.logo{font-family:var(--head);font-size:21px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:.2px;transition:color .3s}
-.nav.scrolled .logo{color:var(--charcoal)}
-.logo em{font-style:italic;font-weight:400;color:var(--sky)}
+.logo{cursor:pointer;display:flex;align-items:center;transition:all .3s}
+.logo img{height:36px;width:auto;filter:brightness(0) invert(1);transition:filter .3s}
+.nav.scrolled .logo img{filter:none}
+.logo em{display:none}
 .nav-links{display:flex;gap:28px;list-style:none}
 .nav-links a{text-decoration:none;font-size:12px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:rgba(255,255,255,.8);cursor:pointer;transition:color .3s;position:relative}
 .nav.scrolled .nav-links a{color:var(--text-lt)}
@@ -256,8 +259,9 @@ html{scroll-behavior:smooth}body{margin:0}
 .ff input:focus,.ff textarea:focus{border-color:var(--sky)}
 .foot{background:var(--charcoal-deep);color:#fff;padding:72px 36px 40px}
 .foot-in{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;gap:48px}
-.f-logo{font-family:var(--head);font-size:24px;font-weight:700;margin-bottom:12px}
-.f-logo em{font-style:italic;font-weight:400;color:var(--sky)}
+.f-logo{margin-bottom:12px}
+.f-logo img{height:32px;width:auto;filter:brightness(0) invert(1)}
+.f-logo em{display:none}
 .foot-brand p{font-size:14px;line-height:1.7;color:rgba(255,255,255,.35);font-weight:300}
 .foot-col h5{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:16px}
 .foot-col a{display:block;font-size:14px;color:rgba(255,255,255,.5);text-decoration:none;margin-bottom:10px;font-weight:300;transition:color .3s;cursor:pointer}
@@ -291,7 +295,7 @@ html{scroll-behavior:smooth}body{margin:0}
 
       <nav className={`nav ${scrolled ? "scrolled" : ""}`}>
         <div className="nav-in">
-          <a className="logo" onClick={() => go("home")}>The Gathering <em>NWI</em></a>
+          <a className="logo" onClick={() => go("home")}><img src={logo} alt="The Gathering Church" /></a>
           <ul className="nav-links">{NAV.map(l => <li key={l.id}><a onClick={() => go(l.id)}>{l.label}</a></li>)}</ul>
           <button className="nav-cta" onClick={() => window.open("https://thegatheringnwi.churchcenter.com/giving", "_blank")}>Give</button>
           <button className={`ham ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu"><span /><span /><span /></button>
@@ -428,11 +432,8 @@ html{scroll-behavior:smooth}body{margin:0}
             </div></Fade>
 
             <Fade delay={.1}><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
-              <div style={{ height: 220, background: "linear-gradient(145deg,#2a2a3a,var(--charcoal-mid))", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ textAlign: "center", color: "rgba(255,255,255,.3)" }}>
-                  <div style={{ fontSize: 56 }}>👨‍👩‍👧‍👦</div>
-                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginTop: 8 }}>Photo Coming Soon</div>
-                </div>
+              <div>
+                <img src={gibsonPhoto} alt="Jordan & Kaitlin Gibson Family" style={{ width: "100%", display: "block" }} />
               </div>
               <div style={{ padding: "32px" }}>
                 <div className="sec-lab">Pastor &amp; Family</div>
@@ -507,9 +508,18 @@ html{scroll-behavior:smooth}body{margin:0}
           <h3 style={{ fontFamily: "var(--head)", fontSize: 28, fontWeight: 600, marginBottom: 10 }}>Stay Connected</h3>
           <p style={{ fontSize: 15, opacity: .9, fontWeight: 300, marginBottom: 28, maxWidth: 480, margin: "0 auto 28px" }}>Follow us on social to stay up to date with everything happening at The Gathering!</p>
           <div style={{ display: "flex", gap: 14, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", color: "var(--charcoal)", padding: "14px 28px", borderRadius: 100, textDecoration: "none", fontSize: 14, fontWeight: 700, letterSpacing: ".5px" }}>Facebook</a>
-            <a href="https://www.instagram.com/thegatheringnwi" target="_blank" rel="noopener noreferrer" style={{ background: "#fff", color: "var(--charcoal)", padding: "14px 28px", borderRadius: 100, textDecoration: "none", fontSize: 14, fontWeight: 700, letterSpacing: ".5px" }}>Instagram</a>
-            <a href={`https://youtube.com/@${YT_HANDLE}`} target="_blank" rel="noopener noreferrer" style={{ background: "#fff", color: "var(--charcoal)", padding: "14px 28px", borderRadius: 100, textDecoration: "none", fontSize: 14, fontWeight: 700, letterSpacing: ".5px" }}>YouTube</a>
+            <a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", color: "var(--charcoal)", padding: "14px 28px", borderRadius: 100, textDecoration: "none", fontSize: 14, fontWeight: 700, letterSpacing: ".5px" }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#1877f2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              Facebook
+            </a>
+            <a href="https://www.instagram.com/thegatheringnwi" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", color: "var(--charcoal)", padding: "14px 28px", borderRadius: 100, textDecoration: "none", fontSize: 14, fontWeight: 700, letterSpacing: ".5px" }}>
+              <svg width="20" height="20" viewBox="0 0 24 24"><defs><linearGradient id="igGrad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stopColor="#fdf497"/><stop offset="5%" stopColor="#fdf497"/><stop offset="45%" stopColor="#fd5949"/><stop offset="60%" stopColor="#d6249f"/><stop offset="90%" stopColor="#285AEB"/></linearGradient></defs><path fill="url(#igGrad)" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+              Instagram
+            </a>
+            <a href={`https://youtube.com/@${YT_HANDLE}`} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#fff", color: "var(--charcoal)", padding: "14px 28px", borderRadius: 100, textDecoration: "none", fontSize: 14, fontWeight: 700, letterSpacing: ".5px" }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#ff0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              YouTube
+            </a>
           </div>
         </div></Fade>
       </section>
@@ -542,7 +552,7 @@ html{scroll-behavior:smooth}body{margin:0}
 
       <footer className="foot">
         <div className="foot-in">
-          <div className="foot-brand"><div className="f-logo">The Gathering <em>NWI</em></div><p>A church on mission to lead people into a growing relationship with Jesus Christ. Schererville, Indiana.</p></div>
+          <div className="foot-brand"><div className="f-logo"><img src={logo} alt="The Gathering Church" /></div><p>A church on mission to lead people into a growing relationship with Jesus Christ. Schererville, Indiana.</p></div>
           <div className="foot-col"><h5>Navigate</h5>{NAV.map(l => <a key={l.id} onClick={() => go(l.id)}>{l.label}</a>)}</div>
           <div className="foot-col"><h5>Connect</h5>
             <a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Facebook</a>
