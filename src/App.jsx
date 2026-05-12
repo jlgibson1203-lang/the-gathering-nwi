@@ -6,6 +6,7 @@ import gibsonPhoto from "./gibson_family.jpg";
 const YT_API_KEY = "AIzaSyDeCJS_Ysga2z9c1CucEaukxCCzxxSGOeo";
 const YT_HANDLE = "thegatheringnwi";
 const YT_SERMONS_PLAYLIST = "";
+const FORMSPREE_URL = "https://formspree.io/f/mbdwanyj";
 
 async function fetchLatestSermon(apiKey = YT_API_KEY, handle = YT_HANDLE) {
   if (!apiKey) return null;
@@ -78,7 +79,19 @@ function Accordion({ title, text }) {
 }
 
 function PrayerModal({ open, onClose }) {
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
   if (!open) return null;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSending(true);
+    const form = e.target;
+    await fetch(FORMSPREE_URL, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } });
+    setSending(false);
+    setSent(true);
+    form.reset();
+    setTimeout(() => { setSent(false); onClose(); }, 2500);
+  };
   return (
     <div className="overlay" onClick={onClose}>
       <div className="modal" onClick={e => e.stopPropagation()}>
@@ -86,12 +99,17 @@ function PrayerModal({ open, onClose }) {
         <div style={{ fontSize: 36, marginBottom: 16 }}>🙏</div>
         <h3>Submit a Prayer Request</h3>
         <p className="modal-sub">What's on your heart? Our prayer team will lift you up.</p>
-        <input type="text" placeholder="Your name (optional)" />
-        <textarea rows={5} placeholder="Share your prayer request here..." />
-        <div style={{ display: "flex", gap: 10, alignItems: "center", margin: "8px 0 16px" }}>
-          <input type="checkbox" id="priv" style={{ width: "auto" }} /><label htmlFor="priv" style={{ fontSize: 13, color: "var(--muted)" }}>Keep this private to the prayer team</label>
-        </div>
-        <button className="btn btn-accent" style={{ width: "100%" }}>Send Prayer Request</button>
+        {sent ? <p style={{ color: "var(--sky)", fontWeight: 600, textAlign: "center", padding: "24px 0" }}>✓ Prayer request sent. We're praying for you.</p> : (
+          <form onSubmit={handleSubmit}>
+            <input type="hidden" name="_subject" value="🙏 Prayer Request" />
+            <input type="text" name="name" placeholder="Your name (optional)" />
+            <textarea rows={5} name="message" placeholder="Share your prayer request here..." required />
+            <div style={{ display: "flex", gap: 10, alignItems: "center", margin: "8px 0 16px" }}>
+              <input type="checkbox" id="priv" name="private" style={{ width: "auto" }} /><label htmlFor="priv" style={{ fontSize: 13, color: "var(--muted)" }}>Keep this private to the prayer team</label>
+            </div>
+            <button className="btn btn-accent" style={{ width: "100%" }} type="submit" disabled={sending}>{sending ? "Sending..." : "Send Prayer Request"}</button>
+          </form>
+        )}
       </div>
     </div>
   );
@@ -104,8 +122,6 @@ export default function TheGatheringNWI() {
   const [prayerOpen, setPrayerOpen] = useState(false);
   const [sermon, setSermon] = useState(null);
   const [sermonLoading, setSermonLoading] = useState(true);
-  const [ytKey, setYtKey] = useState(YT_API_KEY);
-  const [showConfig, setShowConfig] = useState(!YT_API_KEY);
 
   useEffect(() => {
     async function load() {
@@ -125,6 +141,17 @@ export default function TheGatheringNWI() {
     { label: "Groups", id: "groups" },
     { label: "Visit", id: "visit" }, { label: "Contact", id: "contact" },
   ];
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type=submit]');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    await fetch(FORMSPREE_URL, { method: "POST", body: new FormData(e.target), headers: { Accept: "application/json" } });
+    btn.textContent = '✓ Sent!';
+    e.target.reset();
+    setTimeout(() => { btn.textContent = 'Submit'; btn.disabled = false; }, 3000);
+  };
 
   return (
     <div className="root">
@@ -211,7 +238,6 @@ html{scroll-behavior:smooth}body{margin:0}
 .sermon-info{padding:48px 40px;display:flex;flex-direction:column;justify-content:center}
 .sermon-info .sn{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--sky);margin-bottom:10px}
 .sermon-info h3{font-family:var(--head);font-size:32px;font-weight:600;color:var(--charcoal);margin-bottom:10px;line-height:1.2}
-.sermon-info .speaker{font-size:14px;color:var(--muted);margin-bottom:4px}
 .sermon-info .date{font-size:13px;color:var(--muted);margin-bottom:24px}
 .sermon-info .sd{font-size:14px;line-height:1.75;color:var(--text-lt);margin-bottom:28px;font-weight:300}
 .sermon-btns{display:flex;gap:12px;flex-wrap:wrap}
@@ -237,11 +263,10 @@ html{scroll-behavior:smooth}body{margin:0}
 .grp h4{font-size:16px;font-weight:700;color:var(--charcoal);margin-bottom:8px}
 .grp p{font-size:14px;line-height:1.7;color:var(--text-lt);font-weight:300;margin-bottom:14px}
 .grp .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--sky);padding:4px 12px;background:var(--sky-light);border-radius:100px}
+.pastor-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .pray-banner{background:var(--charcoal);border-radius:var(--radius-lg);padding:56px 48px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap}
 .pray-banner h3{font-family:var(--head);font-size:30px;font-weight:600;color:#fff}
 .pray-banner p{font-size:15px;color:rgba(255,255,255,.5);font-weight:300;margin-top:8px;max-width:440px}
-.ct-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
-.ct-details{display:flex;flex-direction:column;gap:18px}
 .ct-d{display:flex;gap:16px;align-items:flex-start}
 .ct-d .ci{width:40px;height:40px;border-radius:12px;background:var(--sky-light);color:var(--sky);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .ct-d h5{font-size:14px;font-weight:600;color:var(--charcoal);margin-bottom:3px}
@@ -280,10 +305,11 @@ html{scroll-behavior:smooth}body{margin:0}
 .fab:hover{transform:scale(1.1);box-shadow:0 6px 32px rgba(59,159,217,.5)}
 @media(max-width:1000px){
   .nav-links,.nav-cta{display:none}.ham{display:block}
-  .sermon{grid-template-columns:1fr}.ct-grid{grid-template-columns:1fr}
+  .sermon{grid-template-columns:1fr}
   .grp-grid{grid-template-columns:1fr}.exp-grid{grid-template-columns:1fr 1fr}
   .qbar-in{grid-template-columns:1fr 1fr}.foot-in{grid-template-columns:1fr 1fr}
   .pray-banner{flex-direction:column;text-align:center}.pray-banner p{margin:8px auto 0}
+  .pastor-grid{grid-template-columns:1fr}
 }
 @media(max-width:600px){
   .sec{padding:72px 20px}.hero-content{padding:120px 20px 80px}
@@ -358,6 +384,7 @@ html{scroll-behavior:smooth}body{margin:0}
         ))}
       </div></Fade></div>
 
+      {/* SERMONS */}
       <section className="sec" id="sermons">
         <Fade><div className="sec-h"><div className="sec-lab">This Week</div><h2 className="sec-title">Latest Sermon</h2></div></Fade>
         <Fade delay={.1}><div className="sermon">
@@ -399,6 +426,53 @@ html{scroll-behavior:smooth}body{margin:0}
         </div></Fade>
       </section>
 
+      {/* WHAT TO EXPECT */}
+      <section className="sec" id="visit">
+        <Fade><div className="sec-h c">
+          <div className="sec-lab">Your First Visit</div>
+          <h2 className="sec-title">What to Expect</h2>
+          <p className="sec-desc">We know visiting a new church can feel nerve-wracking. Here's everything you need to know so you can walk in with confidence.</p>
+        </div></Fade>
+        <div className="exp-grid">
+          {EXPECT.map((e, i) => <Fade key={e.title} delay={i * .05}><div className="exp-card" style={{ cursor: e.url ? "pointer" : "default" }} onClick={() => e.url && window.open(e.url, "_blank")}><span className="ei">{e.icon}</span><h4>{e.title}</h4><p>{e.desc}</p></div></Fade>)}
+        </div>
+      </section>
+
+      {/* LET US KNOW YOU'RE COMING */}
+      <section className="sec" style={{ paddingTop: 0 }}>
+        <Fade><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", padding: 40, maxWidth: 600, margin: "0 auto" }}>
+          <h4 style={{ fontFamily: "var(--head)", fontSize: 28, fontWeight: 600, color: "var(--charcoal)", marginBottom: 6 }}>Let Us Know You're Coming</h4>
+          <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 24 }}>We can't wait to see you!</p>
+          <form onSubmit={handleContactSubmit}>
+            <input type="hidden" name="_subject" value="📋 Plan Your Visit" />
+            <div className="fr"><div className="ff"><label>First Name</label><input type="text" name="firstName" placeholder="First" required /></div><div className="ff"><label>Last Name</label><input type="text" name="lastName" placeholder="Last" required /></div></div>
+            <div className="fr"><div className="ff full"><label>Email</label><input type="email" name="email" placeholder="you@email.com" required /></div></div>
+            <div className="fr"><div className="ff full"><label>Phone (optional)</label><input type="tel" name="phone" placeholder="(555) 123-4567" /></div></div>
+            <div className="fr"><div className="ff full"><label>Questions / Comments</label><textarea rows={4} name="message" placeholder="Anything you'd like us to know?" /></div></div>
+            <button className="btn btn-dark" type="submit" style={{ width: "100%", justifyContent: "center", marginTop: 8 }}>Submit</button>
+          </form>
+        </div></Fade>
+      </section>
+
+      {/* FIND YOUR COMMUNITY (GROUPS) */}
+      <section className="sec" id="groups">
+        <Fade><div className="sec-h c">
+          <div className="sec-lab">Get Connected</div>
+          <h2 className="sec-title">Find Your Community</h2>
+          <p className="sec-desc">Every week we have options for men and women to gather in order to build relationships, learn about Jesus, and pray for each other.</p>
+        </div></Fade>
+        <div className="grp-grid">
+          {[
+            { icon: "📖", title: "Small Groups", desc: "Weekly gatherings to dive deeper into Scripture, share life, and pray for each other in a safe, authentic space.", tag: "Weekly", url: "https://thegatheringnwi.churchcenter.com/groups" },
+            { icon: "👶", title: "Nursery", desc: "A loving, safe environment for children ages 0–3 for the entire service so you can worship with peace of mind.", tag: "Ages 0–3" },
+            { icon: "🌟", title: "Kids' Praise", desc: "Children are an important part of the family here! After worship, kids ages 4–9 head to a fun class where they learn about Jesus through God's Word, worship, and prayer.", tag: "Ages 4–9" },
+            { icon: "🙌", title: "Youth Group", desc: "A dedicated space for older kids to ask big questions, build real friendships, and grow in their faith together.", tag: "Ages 10+ · Every Other Sunday" },
+            { icon: "🤝", title: "Serve Teams", desc: "From community outreach to helping with Sunday services, there are several teams available for you to make a difference.", tag: "Multiple Teams" },
+          ].map((g, i) => <Fade key={g.title} delay={i * .06}><div className="grp" style={{ cursor: g.url ? "pointer" : "default" }} onClick={() => g.url && window.open(g.url, "_blank")}><div className="gi">{g.icon}</div><h4>{g.title}</h4><p>{g.desc}</p><span className="tag">{g.tag}</span></div></Fade>)}
+        </div>
+      </section>
+
+      {/* ABOUT US (combined: story + blurb + pastors) */}
       <section className="sec" id="about" style={{ background: "var(--sky-light)", maxWidth: "none", padding: "100px 36px" }}>
         <div style={{ maxWidth: 1120, margin: "0 auto" }}>
           <Fade><div className="sec-h c">
@@ -416,9 +490,9 @@ html{scroll-behavior:smooth}body{margin:0}
             </div>
           </div></Fade>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+          <div className="pastor-grid">
             <Fade><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", overflow: "hidden" }}>
-              <div style={{ height: 220, background: "linear-gradient(145deg,var(--charcoal-deep),#33334a)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <div style={{ height: 260, background: "linear-gradient(145deg,var(--charcoal-deep),#33334a)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <div style={{ textAlign: "center", color: "rgba(255,255,255,.3)" }}>
                   <div style={{ fontSize: 56 }}>👨‍👩</div>
                   <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", marginTop: 8 }}>Photo Coming Soon</div>
@@ -445,29 +519,7 @@ html{scroll-behavior:smooth}body{margin:0}
         </div>
       </section>
 
-      <section className="sec" id="visit">
-        <Fade><div className="sec-h c">
-          <div className="sec-lab">Your First Visit</div>
-          <h2 className="sec-title">What to Expect</h2>
-          <p className="sec-desc">We know visiting a new church can feel nerve-wracking. Here's everything you need to know so you can walk in with confidence.</p>
-        </div></Fade>
-        <div className="exp-grid">
-          {EXPECT.map((e, i) => <Fade key={e.title} delay={i * .05}><div className="exp-card" style={{ cursor: e.url ? "pointer" : "default" }} onClick={() => e.url && window.open(e.url, "_blank")}><span className="ei">{e.icon}</span><h4>{e.title}</h4><p>{e.desc}</p></div></Fade>)}
-        </div>
-      </section>
-
-      <section className="sec" style={{ paddingTop: 0 }}>
-        <Fade><div style={{ background: "var(--card)", border: "1px solid var(--border)", borderRadius: "var(--radius-lg)", padding: 40, maxWidth: 600, margin: "0 auto" }}>
-          <h4 style={{ fontFamily: "var(--head)", fontSize: 28, fontWeight: 600, color: "var(--charcoal)", marginBottom: 6 }}>Let Us Know You're Coming</h4>
-          <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 24 }}>We can't wait to see you!</p>
-          <div className="fr"><div className="ff"><label>First Name</label><input type="text" placeholder="First" /></div><div className="ff"><label>Last Name</label><input type="text" placeholder="Last" /></div></div>
-          <div className="fr"><div className="ff full"><label>Email</label><input type="email" placeholder="you@email.com" /></div></div>
-          <div className="fr"><div className="ff full"><label>Phone (optional)</label><input type="tel" placeholder="(555) 123-4567" /></div></div>
-          <div className="fr"><div className="ff full"><label>Questions / Comments</label><textarea rows={4} placeholder="Anything you'd like us to know?" /></div></div>
-          <button className="btn btn-dark" style={{ width: "100%", justifyContent: "center", marginTop: 8 }}>Submit</button>
-        </div></Fade>
-      </section>
-
+      {/* BELIEFS */}
       <div className="beliefs-bg" id="beliefs">
         <section className="sec" style={{ padding: "0 36px" }}>
           <Fade><div className="sec-h c">
@@ -479,23 +531,7 @@ html{scroll-behavior:smooth}body{margin:0}
         </section>
       </div>
 
-      <section className="sec" id="groups">
-        <Fade><div className="sec-h c">
-          <div className="sec-lab">Get Connected</div>
-          <h2 className="sec-title">Find Your Community</h2>
-          <p className="sec-desc">Every week we have options for men and women to gather in order to build relationships, learn about Jesus, and pray for each other.</p>
-        </div></Fade>
-        <div className="grp-grid">
-          {[
-            { icon: "📖", title: "Small Groups", desc: "Weekly gatherings to dive deeper into Scripture, share life, and pray for each other in a safe, authentic space.", tag: "Weekly", url: "https://thegatheringnwi.churchcenter.com/groups" },
-            { icon: "👶", title: "Nursery", desc: "A loving, safe environment for children ages 0–3 for the entire service so you can worship with peace of mind.", tag: "Ages 0–3" },
-            { icon: "🌟", title: "Kids' Praise", desc: "Children are an important part of the family here! After worship, kids ages 4–9 head to a fun class where they learn about Jesus through God's Word, worship, and prayer.", tag: "Ages 4–9" },
-            { icon: "🙌", title: "Youth Group", desc: "A dedicated space for older kids to ask big questions, build real friendships, and grow in their faith together.", tag: "Ages 10+ · Every Other Sunday" },
-            { icon: "🤝", title: "Serve Teams", desc: "From community outreach to helping with Sunday services, there are several teams available for you to make a difference.", tag: "Multiple Teams" },
-          ].map((g, i) => <Fade key={g.title} delay={i * .06}><div className="grp" style={{ cursor: g.url ? "pointer" : "default" }} onClick={() => g.url && window.open(g.url, "_blank")}><div className="gi">{g.icon}</div><h4>{g.title}</h4><p>{g.desc}</p><span className="tag">{g.tag}</span></div></Fade>)}
-        </div>
-      </section>
-
+      {/* PRAYER BANNER */}
       <section className="sec">
         <Fade><div className="pray-banner">
           <div><h3>🙏 Need Prayer?</h3><p>Whatever you're walking through, you don't have to carry it alone. Our prayer team would be honored to pray for you.</p></div>
@@ -503,6 +539,7 @@ html{scroll-behavior:smooth}body{margin:0}
         </div></Fade>
       </section>
 
+      {/* SOCIAL BAR */}
       <section className="sec" style={{ paddingTop: 0, paddingBottom: 60 }}>
         <Fade><div style={{ background: "linear-gradient(135deg,var(--sky),#2d8cc6)", borderRadius: "var(--radius-lg)", padding: "48px 40px", textAlign: "center", color: "#fff" }}>
           <h3 style={{ fontFamily: "var(--head)", fontSize: 28, fontWeight: 600, marginBottom: 10 }}>Stay Connected</h3>
@@ -524,32 +561,24 @@ html{scroll-behavior:smooth}body{margin:0}
         </div></Fade>
       </section>
 
+      {/* CONTACT (details only, no duplicate form) */}
       <section className="sec" id="contact" style={{ background: "var(--sky-light)", maxWidth: "none", padding: "100px 36px" }}>
-        <div style={{ maxWidth: 1120, margin: "0 auto" }}>
-          <Fade><div className="sec-h"><div className="sec-lab">Reach Out</div><h2 className="sec-title">We'd Love to Hear from You</h2></div></Fade>
-          <div className="ct-grid">
-            <Fade><div className="ct-details">
-              {[
-                { icon: "📍", h: "Location", p: "360 E Lincoln Hwy, Schererville, IN 46375" },
-                { icon: "⏰", h: "Service Time", p: "Every Sunday at 10:30 AM" },
-                { icon: "📞", h: "Phone", p: <a href="tel:2197652124">(219) 765-2124</a> },
-                { icon: "✉️", h: "Email", p: <a href="mailto:gatheringchurchnwi@gmail.com">gatheringchurchnwi@gmail.com</a> },
-                { icon: "💬", h: "Social", p: <span><a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Facebook</a> · <a href="https://www.instagram.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href={`https://youtube.com/@${YT_HANDLE}`} target="_blank" rel="noopener noreferrer">YouTube</a></span> },
-                { icon: "📱", h: "Church Center", p: <a href="https://thegatheringnwi.churchcenter.com/" target="_blank" rel="noopener noreferrer">Download the app for groups, events &amp; giving</a> },
-              ].map(d => <div className="ct-d" key={d.h}><div className="ci">{d.icon}</div><div><h5>{d.h}</h5><p>{d.p}</p></div></div>)}
-            </div></Fade>
-            <Fade delay={.15}><div className="ct-form">
-              <h4>Send Us a Message</h4><p className="sub">We'd love to hear from you!</p>
-              <div className="fr"><div className="ff"><label>First Name</label><input type="text" placeholder="First" /></div><div className="ff"><label>Last Name</label><input type="text" placeholder="Last" /></div></div>
-              <div className="fr"><div className="ff full"><label>Email</label><input type="email" placeholder="you@email.com" /></div></div>
-              <div className="fr"><div className="ff full"><label>Phone (optional)</label><input type="tel" placeholder="(555) 123-4567" /></div></div>
-              <div className="fr"><div className="ff full"><label>Questions / Comments</label><textarea rows={4} placeholder="Anything you'd like us to know?" /></div></div>
-              <button className="btn btn-dark" style={{ width: "100%", justifyContent: "center", marginTop: 8 }}>Submit</button>
-            </div></Fade>
-          </div>
+        <div style={{ maxWidth: 700, margin: "0 auto" }}>
+          <Fade><div className="sec-h c"><div className="sec-lab">Reach Out</div><h2 className="sec-title">We'd Love to Hear from You</h2></div></Fade>
+          <Fade><div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
+            {[
+              { icon: "📍", h: "Location", p: <a href="https://www.google.com/maps?saddr=My+Location&daddr=360+East+Lincoln+Highway+Schererville+IN+46375" target="_blank" rel="noopener noreferrer">360 E Lincoln Hwy, Schererville, IN 46375</a> },
+              { icon: "⏰", h: "Service Time", p: "Every Sunday at 10:30 AM" },
+              { icon: "📞", h: "Phone", p: <a href="tel:2197652124">(219) 765-2124</a> },
+              { icon: "✉️", h: "Email", p: <a href="mailto:gatheringchurchnwi@gmail.com">gatheringchurchnwi@gmail.com</a> },
+              { icon: "💬", h: "Social", p: <span><a href="https://www.facebook.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Facebook</a> · <a href="https://www.instagram.com/thegatheringnwi" target="_blank" rel="noopener noreferrer">Instagram</a> · <a href={`https://youtube.com/@${YT_HANDLE}`} target="_blank" rel="noopener noreferrer">YouTube</a></span> },
+              { icon: "📱", h: "Church Center", p: <a href="https://thegatheringnwi.churchcenter.com/" target="_blank" rel="noopener noreferrer">Download the app</a> },
+            ].map(d => <div className="ct-d" key={d.h}><div className="ci">{d.icon}</div><div><h5>{d.h}</h5><p>{d.p}</p></div></div>)}
+          </div></Fade>
         </div>
       </section>
 
+      {/* FOOTER */}
       <footer className="foot">
         <div className="foot-in">
           <div className="foot-brand"><div className="f-logo"><img src={logo} alt="The Gathering Church" /></div><p>A church on mission to lead people into a growing relationship with Jesus Christ. Schererville, Indiana.</p></div>
